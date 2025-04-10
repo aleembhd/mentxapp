@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Message Logs - StudentConnect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/favicon.ico">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        .messages-container {
+            padding: 15px;
+            margin-bottom: 60px;
+        }
+        
+        .messages-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .messages-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .messages-table th {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+        }
+        
+        .messages-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .messages-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .messages-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .export-button {
+            background-color: var(--blue);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .clear-button {
+            background-color: var(--red);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 15px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .date-filter {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .date-filter input {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .filter-button {
+            background-color: var(--purple);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .empty-state i {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 15px;
+        }
+        
+        /* Add loading animation */
+        .loading {
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .loading-spinner {
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-green);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Add message truncation */
+        .messages-table .message-cell {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Improve mobile responsiveness */
+        .table-responsive-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .messages-table {
+            min-width: 800px; /* Ensure minimum width for all columns */
+            margin-bottom: 0;
+            box-shadow: none;
+            border-radius: 0;
+        }
+        
+        .scroll-indicator {
+            text-align: center;
+            padding: 5px;
+            font-size: 12px;
+            color: #666;
+            display: none;
+        }
+        
+        /* Show scroll indicator only on small screens */
+        @media (max-width: 768px) {
+            .scroll-indicator {
+                display: block;
+            }
+            
+            .messages-container {
+                padding: 10px;
+            }
+            
+            .messages-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .messages-header > div {
+                display: flex;
+                width: 100%;
+                gap: 10px;
+            }
+            
+            .messages-header button {
+                flex: 1;
+            }
+            
+            .date-filter {
+                flex-wrap: wrap;
+            }
+            
+            .date-filter input {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+        
+        /* Print preview styles */
+        .print-preview {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            display: none;
+            overflow: auto;
+        }
+        
+        .print-preview-content {
+            width: 210mm; /* A4 width */
+            background-color: white;
+            margin: 20px auto;
+            padding: 15mm;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        }
+        
+        .print-preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .print-preview-title {
+            font-size: 24px;
+            color: var(--primary-green);
+        }
+        
+        .print-preview-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .print-preview-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10pt;
+            margin-bottom: 30px;
+        }
+        
+        .print-preview-table th {
+            background-color: var(--primary-green);
+            color: white;
+            text-align: left;
+            padding: 8px;
+            font-weight: 500;
+            border: 1px solid #ddd;
+        }
+        
+        .print-preview-table td {
+            padding: 6px 8px;
+            border: 1px solid #ddd;
+            vertical-align: top;
+        }
+        
+        .print-preview-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            
+            .print-preview-content, .print-preview-content * {
+                visibility: visible;
+            }
+            
+            .print-preview-content {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 0;
+                margin: 0;
+                box-shadow: none;
+            }
+            
+            .print-preview-actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="app-header">
+        <div class="header-content">
+            <div class="logo-container">
+                <div class="gn-logo">GN</div>
+                <div class="header-text">GURU NANAK INSTITUTIONS</div>
+            </div>
+            <div class="programs">
+                Engineering • Dental • MBA • MCA • Pharmacy • PGDM
+            </div>
+        </div>
+    </div>
+    
+    <!-- Section Title -->
+    <div class="section-banner">
+        <span>Message Logs</span>
+    </div>
+    
+    <div class="messages-container">
+        <div class="messages-header">
+            <h2><i class="fas fa-comment-alt"></i> Recent Message Logs</h2>
+            <div>
+                <button class="export-button" onclick="exportMessageLogs()">
+                    <i class="fas fa-download"></i> Export
+                </button>
+                <button class="clear-button" onclick="clearAllLogs()">
+                    <i class="fas fa-trash"></i> Clear All
+                </button>
+            </div>
+        </div>
+        
+        <div class="date-filter">
+            <input type="date" id="startDate" placeholder="Start Date">
+            <input type="date" id="endDate" placeholder="End Date">
+            <button class="filter-button" onclick="filterLogs()">
+                <i class="fas fa-filter"></i> Filter
+            </button>
+        </div>
+        
+        <div id="loadingIndicator" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading message logs...</p>
+        </div>
+        
+        <div id="tableContainer" style="display: none;">
+            <div class="scroll-indicator">
+                <i class="fas fa-arrows-alt-h"></i> Swipe to see more
+            </div>
+            <div class="table-responsive-wrapper">
+                <table class="messages-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Sender</th>
+                            <th>Recipient</th>
+                            <th>Student Name</th>
+                            <th>Roll Number</th>
+                            <th>Parent Name</th>
+                            <th>Message</th>
+                            <th>Status</th>
+                            <th>Platform</th>
+                        </tr>
+                    </thead>
+                    <tbody id="logsTableBody">
+                        <!-- Logs will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div id="emptyState" class="empty-state" style="display: none;">
+            <i class="fas fa-inbox"></i>
+            <h3>No Messages Found</h3>
+            <p>There are no message logs matching your criteria.</p>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-navbar">
+        <a href="webapp.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="messages.html" class="nav-item active">
+            <i class="fas fa-comment-alt"></i>
+            <span>Messages</span>
+        </a>
+        <a href="students.html" class="nav-item">
+            <i class="fas fa-user-graduate"></i>
+            <span>Students</span>
+        </a>
+        <a href="#" class="nav-item logout" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Logout</span>
+        </a>
+    </div>
+    
+    <div id="printPreview" class="print-preview">
+        <div class="print-preview-content" id="printContent">
+            <!-- Content will be dynamically added here -->
+        </div>
+    </div>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyCs1Wgew-Y1hcY8xIUm9uFagdeByDTDGU0",
+  authDomain: "collegeapp-59309.firebaseapp.com",
+  projectId: "collegeapp-59309",
+  storageBucket: "collegeapp-59309.firebasestorage.app",
+  messagingSenderId: "298826677970",
+  appId: "1:298826677970:web:3989fed84dd5bb4d73f70b"
+};
+        
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        
+        // Global variable to store logs
+        let allLogs = [];
+        
+        // Load message logs when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadLogsFromFirebase();
+        });
+        
+        // Function to fetch logs from Firebase
+        function loadLogsFromFirebase() {
+            // Show loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('tableContainer').style.display = 'none';
+            document.getElementById('emptyState').style.display = 'none';
+            
+            // Hardcode the faculty name to ensure we only fetch data for this specific faculty
+            const FACULTY_NAME = "Shashikala";
+            
+            // Check if we have cached data less than 5 minutes old
+            const cachedData = localStorage.getItem('cachedMessageLogs');
+            const cacheTimestamp = localStorage.getItem('messageCacheTimestamp');
+            
+            if (cachedData && cacheTimestamp && (Date.now() - parseInt(cacheTimestamp)) < 300000) {
+                // Use cached data if it's less than 5 minutes old
+                allLogs = JSON.parse(cachedData);
+                document.getElementById('loadingIndicator').style.display = 'none';
+                displayLogs(allLogs);
+                return;
+            }
+            
+            // Fetch only specific faculty data - direct path to Shashikala faculty node
+            database.ref(`faculty/${FACULTY_NAME}`).once('value')
+                .then(snapshot => {
+                    allLogs = [];
+                    
+                    // Process each message - in this structure, each child is a message with a unique ID
+                    snapshot.forEach(messageSnapshot => {
+                        const messageId = messageSnapshot.key;
+                        const messageData = messageSnapshot.val();
+                        
+                        if (messageData && typeof messageData === 'object') {
+                            // Add the message ID to the data object for reference
+                            messageData.id = messageId;
+                            
+                            // Ensure sender is set if missing
+                            if (!messageData.sender) {
+                                messageData.sender = "Shashikala";
+                            }
+                            
+                            allLogs.push(messageData);
+                        }
+                    });
+                    
+                    // Sort logs by timestamp (newest first)
+                    allLogs.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                    
+                    // Cache the results
+                    localStorage.setItem('cachedMessageLogs', JSON.stringify(allLogs));
+                    localStorage.setItem('messageCacheTimestamp', Date.now().toString());
+                    
+                    // Hide loading indicator
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    
+                    // Display logs
+                    displayLogs(allLogs);
+                })
+                .catch(error => {
+                    console.error('Error fetching logs from Firebase:', error);
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    alert('Error loading message logs. Please try again later.');
+                });
+        }
+        
+        // Function to display logs in the table
+        function displayLogs(logs) {
+            const tableBody = document.getElementById('logsTableBody');
+            const emptyState = document.getElementById('emptyState');
+            const tableContainer = document.getElementById('tableContainer');
+            
+            // Clear existing rows
+            tableBody.innerHTML = '';
+            
+            if (logs.length === 0) {
+                // Show empty state
+                emptyState.style.display = 'block';
+                tableContainer.style.display = 'none';
+                return;
+            }
+            
+            // Sort logs by timestamp (newest first)
+            logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            // Show table, hide empty state
+            emptyState.style.display = 'none';
+            tableContainer.style.display = 'block';
+            
+            // Add rows to the table
+            logs.forEach(log => {
+                const row = document.createElement('tr');
+                
+                // Format date as "16 Mar 2025" (day month year) without time
+                const date = new Date(log.timestamp);
+                const timestamp = date.toLocaleDateString('en-US', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+                
+                // Format phone number to show only the last 10 digits
+                let formattedPhone = log.recipient || 'N/A';
+                if (formattedPhone !== 'N/A') {
+                    // Remove the +91 prefix if present
+                    if (formattedPhone.startsWith('+91')) {
+                        formattedPhone = formattedPhone.substring(3);
+                    }
+                    // Ensure we have only the last 10 digits
+                    formattedPhone = formattedPhone.slice(-10);
+                }
+                
+                row.innerHTML = `
+                    <td>${timestamp}</td>
+                    <td>${log.sender || 'System'}</td>
+                    <td>${formattedPhone}</td>
+                    <td>${log.studentName || 'N/A'}</td>
+                    <td>${log.studentRoll || 'N/A'}</td>
+                    <td>${log.parentName || 'N/A'}</td>
+                    <td class="message-cell" title="${log.message || 'N/A'}">${log.message || 'N/A'}</td>
+                    <td>${log.status || 'Sent'}</td>
+                    <td>${log.platform || 'SMS'}</td>
+                `;
+                
+                tableBody.appendChild(row);
+            });
+        }
+        
+        // Function to filter logs by date range
+        function filterLogs() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            // If no dates selected, show all logs
+            if (!startDate && !endDate) {
+                displayLogs(allLogs);
+                return;
+            }
+            
+            // Filter logs by date range
+            const filteredLogs = allLogs.filter(log => {
+                const logDate = new Date(log.timestamp);
+                
+                if (startDate && endDate) {
+                    return logDate >= new Date(startDate) && logDate <= new Date(endDate + 'T23:59:59');
+                } else if (startDate) {
+                    return logDate >= new Date(startDate);
+                } else if (endDate) {
+                    return logDate <= new Date(endDate + 'T23:59:59');
+                }
+                
+                return true;
+            });
+            
+            displayLogs(filteredLogs);
+        }
+        
+        // Function to clear all logs with confirmation
+        function clearAllLogs() {
+            // Show a more specific confirmation message
+            if (confirm('Are you sure you want to clear all message logs for Shashikala? This action cannot be undone.')) {
+                // Show loading indicator
+                document.getElementById('loadingIndicator').style.display = 'block';
+                document.getElementById('tableContainer').style.display = 'none';
+                
+                // Clear logs from the correct Firebase path for this faculty
+                const FACULTY_NAME = "Shashikala";
+                database.ref(`faculty/${FACULTY_NAME}`).remove()
+                    .then(() => {
+                        // Clear local data too
+                        allLogs = [];
+                        localStorage.removeItem('cachedMessageLogs');
+                        localStorage.removeItem('messageCacheTimestamp');
+                        
+                        document.getElementById('loadingIndicator').style.display = 'none';
+                        displayLogs(allLogs);
+                        
+                        // Show a specific success message
+                        alert(`Message logs for faculty ${FACULTY_NAME.replace('_', ' ')} have been successfully cleared.`);
+                    })
+                    .catch(error => {
+                        console.error('Error clearing logs:', error);
+                        document.getElementById('loadingIndicator').style.display = 'none';
+                        alert(`Error clearing message logs: ${error.message}. Please try again later.`);
+                    });
+            }
+        }
+        
+        // Function to export logs to PDF
+        function exportMessageLogs() {
+            if (allLogs.length === 0) {
+                alert('No logs available to export.');
+                return;
+            }
+            
+            // Show loading indicator
+            document.getElementById('loadingIndicator').style.display = 'block';
+            
+            // Get date ranges for filename
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            // Create dynamic filename based on date range
+            let filename = 'message_logs';
+            
+            if (startDate && endDate) {
+                filename = `message_logs_${startDate}_to_${endDate}`;
+            } else if (startDate) {
+                filename = `message_logs_from_${startDate}`;
+            } else if (endDate) {
+                filename = `message_logs_until_${endDate}`;
+            }
+            
+            filename += '.pdf';
+            
+            // Get filtered logs
+            const filteredLogs = getCurrentFilteredLogs();
+            
+            // Create content for PDF (not showing in UI)
+            const pdfContent = document.createElement('div');
+            pdfContent.style.padding = '20px';
+            pdfContent.style.backgroundColor = 'white';
+            
+            // Add title
+            const title = document.createElement('h2');
+            title.textContent = 'Message Logs - Guru Nanak Institutions';
+            title.style.textAlign = 'center';
+            title.style.marginBottom = '20px';
+            title.style.color = '#007E4E';
+            title.style.fontSize = '18pt';
+            
+            pdfContent.appendChild(title);
+            
+            // Add date range info
+            const dateInfo = document.createElement('p');
+            dateInfo.style.marginBottom = '15px';
+            dateInfo.style.fontStyle = 'italic';
+            dateInfo.style.textAlign = 'center';
+            
+            if (startDate && endDate) {
+                dateInfo.textContent = `Date Range: ${startDate} to ${endDate}`;
+            } else if (startDate) {
+                dateInfo.textContent = `From: ${startDate}`;
+            } else if (endDate) {
+                dateInfo.textContent = `Until: ${endDate}`;
+            }
+            
+            pdfContent.appendChild(dateInfo);
+            
+            // Create table with enhanced header styling
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.borderCollapse = 'collapse';
+            table.style.marginBottom = '20px';
+            
+            // Create table header with strong highlighting
+            const thead = document.createElement('thead');
+            const headerRow = document.createElement('tr');
+            
+            ['Date', 'Sender', 'Recipient', 'Student Name', 'Roll Number', 'Parent Name', 'Message', 'Status', 'Platform'].forEach(headerText => {
+                const th = document.createElement('th');
+                th.textContent = headerText;
+                th.style.backgroundColor = '#007E4E';
+                th.style.color = 'white';
+                th.style.fontWeight = 'bold';
+                th.style.padding = '10px';
+                th.style.textAlign = 'left';
+                th.style.border = '1px solid #005a38';
+                
+                headerRow.appendChild(th);
+            });
+            
+            thead.appendChild(headerRow);
+            table.appendChild(thead);
+            
+            // Create table body
+            const tbody = document.createElement('tbody');
+            
+            filteredLogs.forEach((log, index) => {
+                const row = document.createElement('tr');
+                row.style.backgroundColor = index % 2 === 0 ? 'white' : '#f9f9f9';
+                
+                const timestamp = new Date(log.timestamp).toLocaleString();
+                
+                [
+                    timestamp,
+                    log.sender || 'System',
+                    log.recipient || 'N/A',
+                    log.studentName || 'N/A',
+                    log.studentRoll || 'N/A',
+                    log.parentName || 'N/A',
+                    log.message || 'N/A',
+                    log.status || 'Sent',
+                    log.platform || 'SMS'
+                ].forEach((cellText, cellIndex) => {
+                    const td = document.createElement('td');
+                    td.textContent = cellText;
+                    td.style.padding = '8px';
+                    td.style.border = '1px solid #ddd';
+                    
+                    // Format message column for better readability
+                    if (cellIndex === 6) { // Message column
+                        td.style.maxWidth = '250px';
+                        td.style.wordBreak = 'break-word';
+                    }
+                    
+                    row.appendChild(td);
+                });
+                
+                tbody.appendChild(row);
+            });
+            
+            table.appendChild(tbody);
+            pdfContent.appendChild(table);
+            
+            // Add footer
+            const footer = document.createElement('div');
+            footer.style.fontSize = '10pt';
+            footer.style.color = '#666';
+            footer.style.textAlign = 'center';
+            footer.style.marginTop = '20px';
+            footer.style.borderTop = '1px solid #ddd';
+            footer.style.paddingTop = '10px';
+            footer.textContent = `Generated on ${new Date().toLocaleString()} - Total Records: ${filteredLogs.length}`;
+            
+            pdfContent.appendChild(footer);
+            
+            // Enhanced PDF export options with dynamic filename
+            const opt = {
+                margin: [10, 10, 10, 10],
+                filename: filename, // Use the dynamic filename
+                image: { type: 'jpeg', quality: 1.0 },
+                html2canvas: { 
+                    scale: 2,
+                    useCORS: true,
+                    logging: false
+                },
+                jsPDF: { 
+                    unit: 'mm', 
+                    format: 'a4', 
+                    orientation: 'landscape',
+                    compress: true
+                }
+            };
+            
+            // Generate and download PDF directly without preview
+            html2pdf()
+                .from(pdfContent)
+                .set(opt)
+                .save()
+                .then(() => {
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error generating PDF:', error);
+                    document.getElementById('loadingIndicator').style.display = 'none';
+                    alert('Error generating PDF. Please try again.');
+                });
+        }
+        
+        // Helper function to get currently filtered logs
+        function getCurrentFilteredLogs() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            // If no dates selected, return all logs
+            if (!startDate && !endDate) {
+                return allLogs;
+            }
+            
+            // Filter logs by date range
+            return allLogs.filter(log => {
+                const logDate = new Date(log.timestamp);
+                
+                if (startDate && endDate) {
+                    return logDate >= new Date(startDate) && logDate <= new Date(endDate + 'T23:59:59');
+                } else if (startDate) {
+                    return logDate >= new Date(startDate);
+                } else if (endDate) {
+                    return logDate <= new Date(endDate + 'T23:59:59');
+                }
+                
+                return true;
+            });
+        }
+        
+        // Function to logout
+        function logout() {
+            // Add your logout logic here
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html> 
