@@ -11,9 +11,43 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
+        /* Scrolling Ribbon Styles */
+        .scrolling-ribbon {
+            margin-top: 10px; /* Add gap at the very top */
+            position: fixed; /* Fix ribbon to the top */
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #253951; /* Dark background */
+            color: white;
+            padding: 8px 0;
+            font-size: 0.9em;
+            text-align: center;
+            overflow: hidden; /* Hide overflowing text */
+            white-space: nowrap; /* Keep text on one line */
+            z-index: 1000; /* Ensure it's above other content */
+        }
+
+        .scrolling-ribbon p {
+            display: inline-block; /* Allows animation */
+            padding-left: 100%; /* Start text off-screen */
+            animation: scroll-left 15s linear infinite; /* Adjust duration as needed */
+            margin: 0; /* Remove default paragraph margin */
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
         .messages-container {
             padding: 15px;
             margin-bottom: 60px;
+            padding-top: 60px; /* Add extra padding at the top for the ribbon */
         }
         
         .messages-header {
@@ -120,21 +154,42 @@
         .loading {
             text-align: center;
             padding: 30px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin: 20px 0;
         }
         
-        .loading-spinner {
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--primary-green);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px auto;
+        .loading p {
+            color: var(--primary-green);
+            font-weight: 500;
+            margin: 15px 0;
+            font-size: 16px;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .loader-progress {
+            width: 80%;
+            height: 6px;
+            background-color: #eee;
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--primary-green);
+            border-radius: 10px;
+            animation: progress 2s ease-in-out forwards;
+        }
+        
+        @keyframes progress {
+            0% { width: 0%; }
+            20% { width: 40%; }
+            50% { width: 60%; }
+            80% { width: 85%; }
+            100% { width: 100%; }
         }
         
         /* Add message truncation */
@@ -297,8 +352,13 @@
 </head>
 
 <body>
+    <!-- Scrolling Ribbon -->
+    <div class="scrolling-ribbon">
+        <p>🎉App is under development. More features coming soon! Stay tuned...🎉</p>
+    </div>
+    
     <!-- Header -->
-    <div class="app-header">
+    <!-- <div class="app-header">
         <div class="header-content">
             <div class="logo-container">
                 <div class="gn-logo">GN</div>
@@ -308,13 +368,13 @@
                 Engineering • Dental • MBA • MCA • Pharmacy • PGDM
             </div>
         </div>
-    </div>
+    </div> -->
     
     <!-- Section Title -->
-    <div class="section-banner">
+    <!-- <div class="section-banner">
         <span>Message Logs</span>
     </div>
-    
+     -->
     <div class="messages-container">
         <div class="messages-header">
             <h2><i class="fas fa-comment-alt"></i> Recent Message Logs</h2>
@@ -337,8 +397,10 @@
         </div>
         
         <div id="loadingIndicator" class="loading">
-            <div class="loading-spinner"></div>
-            <p>Loading message logs...</p>
+            <p>Syncing latest messages...</p>
+            <div class="loader-progress">
+                <div class="progress-bar"></div>
+            </div>
         </div>
         
         <div id="tableContainer" style="display: none;">
@@ -388,9 +450,9 @@
             <i class="fas fa-user-graduate"></i>
             <span>Students</span>
         </a>
-        <a href="#" class="nav-item logout" onclick="logout()">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>Logout</span>
+        <a href="profile.html" class="nav-item" id="profileBtn">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
         </a>
     </div>
     
@@ -428,68 +490,239 @@
         
         // Function to fetch logs from Firebase
         function loadLogsFromFirebase() {
-            // Show loading indicator
-            document.getElementById('loadingIndicator').style.display = 'block';
+            // Show loading indicator with animated steps
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const loadingText = loadingIndicator.querySelector('p');
+            loadingIndicator.style.display = 'block';
             document.getElementById('tableContainer').style.display = 'none';
             document.getElementById('emptyState').style.display = 'none';
             
-            // Hardcode the faculty name to ensure we only fetch data for this specific faculty
-            const FACULTY_NAME = "Shashikala";
+            // Get faculty name from localStorage instead of hardcoding
+            const facultyName = localStorage.getItem('currentFaculty') || "Shashikala";
             
-            // Check if we have cached data less than 5 minutes old
-            const cachedData = localStorage.getItem('cachedMessageLogs');
-            const cacheTimestamp = localStorage.getItem('messageCacheTimestamp');
+            // Set a minimum loader display time with progressive messages
+            const loaderStartTime = Date.now();
+            const MIN_LOADER_TIME = 1500; // increased for better perception (1.5 seconds)
             
-            if (cachedData && cacheTimestamp && (Date.now() - parseInt(cacheTimestamp)) < 300000) {
-                // Use cached data if it's less than 5 minutes old
-                allLogs = JSON.parse(cachedData);
-                document.getElementById('loadingIndicator').style.display = 'none';
-                displayLogs(allLogs);
-                return;
-            }
+            // Create an array of loading messages to display in sequence
+            const loadingMessages = [
+                "Connecting to server...",
+                "Retrieving latest message logs...",
+                "Almost there...",
+                "Syncing latest messages..."
+            ];
             
-            // Fetch only specific faculty data - direct path to Shashikala faculty node
-            database.ref(`faculty/${FACULTY_NAME}`).once('value')
+            let messageIndex = 0;
+            
+            // Update loading message every 300ms to create perception of work
+            const messageInterval = setInterval(() => {
+                loadingText.textContent = loadingMessages[messageIndex];
+                messageIndex = (messageIndex + 1) % loadingMessages.length;
+            }, 300);
+            
+            // Reset the progress bar animation on each load
+            const progressBar = loadingIndicator.querySelector('.progress-bar');
+            progressBar.style.animation = 'none';
+            // Trigger reflow
+            void progressBar.offsetWidth;
+            progressBar.style.animation = 'progress 2s ease-in-out forwards';
+            
+            // UPDATED: Fetch from communications node instead of directly from faculty
+            database.ref(`faculty/${facultyName}/communications`).once('value')
                 .then(snapshot => {
                     allLogs = [];
                     
-                    // Process each message - in this structure, each child is a message with a unique ID
-                    snapshot.forEach(messageSnapshot => {
-                        const messageId = messageSnapshot.key;
-                        const messageData = messageSnapshot.val();
-                        
-                        if (messageData && typeof messageData === 'object') {
-                            // Add the message ID to the data object for reference
-                            messageData.id = messageId;
+                    // Process each student's communications node
+                    snapshot.forEach(studentSnapshot => {
+                        // Process each message for this student
+                        studentSnapshot.forEach(messageSnapshot => {
+                            const messageId = messageSnapshot.key;
+                            const messageData = messageSnapshot.val();
                             
-                            // Ensure sender is set if missing
-                            if (!messageData.sender) {
-                                messageData.sender = "Shashikala";
+                            if (messageData && typeof messageData === 'object') {
+                                messageData.id = messageId;
+                                
+                                if (!messageData.sender) {
+                                    messageData.sender = facultyName;
+                                }
+                                
+                                allLogs.push(messageData);
                             }
-                            
-                            allLogs.push(messageData);
-                        }
+                        });
                     });
                     
                     // Sort logs by timestamp (newest first)
                     allLogs.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
                     
-                    // Cache the results
+                    // Update the cache for future reference
                     localStorage.setItem('cachedMessageLogs', JSON.stringify(allLogs));
                     localStorage.setItem('messageCacheTimestamp', Date.now().toString());
                     
-                    // Hide loading indicator
-                    document.getElementById('loadingIndicator').style.display = 'none';
+                    // Calculate how long to show the loader
+                    const elapsedTime = Date.now() - loaderStartTime;
+                    const remainingLoaderTime = Math.max(0, MIN_LOADER_TIME - elapsedTime);
                     
-                    // Display logs
-                    displayLogs(allLogs);
+                    // Change final message to indicate completion
+                    setTimeout(() => {
+                        clearInterval(messageInterval);
+                        loadingText.textContent = "Data successfully loaded!";
+                        
+                        // Add slight delay before hiding to show completion message
+                        setTimeout(() => {
+                            // Hide loading indicator
+                            loadingIndicator.style.display = 'none';
+                            
+                            // Display logs
+                            displayLogs(allLogs);
+                            
+                            // No need for fetchMoreLogsInBackground since we're getting all communications
+                        }, 500);
+                    }, remainingLoaderTime);
                 })
                 .catch(error => {
                     console.error('Error fetching logs from Firebase:', error);
-                    document.getElementById('loadingIndicator').style.display = 'none';
-                    alert('Error loading message logs. Please try again later.');
+                    
+                    // Ensure loader shows for minimum time even on error
+                    const elapsedTime = Date.now() - loaderStartTime;
+                    const remainingLoaderTime = Math.max(0, MIN_LOADER_TIME - elapsedTime);
+                    
+                    setTimeout(() => {
+                        clearInterval(messageInterval);
+                        loadingText.textContent = "Checking backup data sources...";
+                        
+                        setTimeout(() => {
+                            document.getElementById('loadingIndicator').style.display = 'none';
+                            
+                            // Try to show cached data if available
+                            const cachedData = localStorage.getItem('cachedMessageLogs');
+                            if (cachedData) {
+                                try {
+                                    allLogs = JSON.parse(cachedData);
+                                    displayLogs(allLogs);
+                                    alert('Using cached data. Could not refresh from server.');
+                                } catch (e) {
+                                    alert('Error loading message logs. Please try again later.');
+                                }
+                            } else {
+                                alert('Error loading message logs. Please try again later.');
+                            }
+                        }, 500);
+                    }, remainingLoaderTime);
                 });
         }
+        
+        // Function to refresh logs in background without disrupting the UI
+        function refreshLogsInBackground() {
+            const facultyName = localStorage.getItem('currentFaculty') || "Shashikala";
+            
+            // Silently fetch updated data
+            database.ref(`faculty/${facultyName}/communications`).once('value')
+                .then(snapshot => {
+                    const updatedLogs = [];
+                    
+                    // Process each student's communications node
+                    snapshot.forEach(studentSnapshot => {
+                        // Process each message for this student
+                        studentSnapshot.forEach(messageSnapshot => {
+                            const messageId = messageSnapshot.key;
+                            const messageData = messageSnapshot.val();
+                            
+                            if (messageData && typeof messageData === 'object') {
+                                messageData.id = messageId;
+                                if (!messageData.sender) {
+                                    messageData.sender = facultyName;
+                                }
+                                updatedLogs.push(messageData);
+                            }
+                        });
+                    });
+                    
+                    // Only update if we have new data
+                    if (updatedLogs.length > 0) {
+                        updatedLogs.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                        
+                        // Update cache and display without showing loading indicator
+                        localStorage.setItem('cachedMessageLogs', JSON.stringify(updatedLogs));
+                        localStorage.setItem('messageCacheTimestamp', Date.now().toString());
+                        
+                        // Update global variable
+                        allLogs = updatedLogs;
+                        
+                        // Update display without showing "loading"
+                        displayLogs(allLogs);
+                    }
+                })
+                .catch(error => {
+                    console.error('Background refresh error:', error);
+                    // Silent fail - user still has cached data
+                });
+        }
+        
+        // Function to fetch more logs in the background - Not needed with new implementation
+        function fetchMoreLogsInBackground() {
+            // This function is no longer needed as we fetch all communications at once
+            console.log("Fetch more logs function is deprecated with new implementation");
+        }
+        
+        // Function to preload messages data
+        function preloadMessagesData() {
+            const facultyName = localStorage.getItem('currentFaculty') || "Shashikala";
+            const cachedData = localStorage.getItem('cachedMessageLogs');
+            
+            if (cachedData) {
+                try {
+                    // We already have cached data, just silently refresh in background
+                    refreshLogsInBackground();
+                } catch (e) {
+                    console.error("Error with preload:", e);
+                }
+            } else {
+                // No cached data, fetch a small batch silently
+                database.ref(`faculty/${facultyName}/communications`).once('value')
+                    .then(snapshot => {
+                        const preloadedLogs = [];
+                        
+                        // Process each student's communications
+                        snapshot.forEach(studentSnapshot => {
+                            // Process each message for this student (limit to a reasonable number)
+                            let count = 0;
+                            studentSnapshot.forEach(messageSnapshot => {
+                                if (count >= 20) return; // Only get up to 20 messages per student
+                                count++;
+                                
+                                const messageId = messageSnapshot.key;
+                                const messageData = messageSnapshot.val();
+                                
+                                if (messageData && typeof messageData === 'object') {
+                                    messageData.id = messageId;
+                                    if (!messageData.sender) {
+                                        messageData.sender = facultyName;
+                                    }
+                                    preloadedLogs.push(messageData);
+                                }
+                            });
+                        });
+                        
+                        if (preloadedLogs.length > 0) {
+                            preloadedLogs.sort((a, b) => new Date(b.timestamp || 0) - new Date(a.timestamp || 0));
+                            localStorage.setItem('cachedMessageLogs', JSON.stringify(preloadedLogs));
+                            localStorage.setItem('messageCacheTimestamp', Date.now().toString());
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Preload error:', error);
+                    });
+            }
+        }
+        
+        // Add this script to webapp.html to preload messages data when hovering over messages tab
+        document.addEventListener('DOMContentLoaded', function() {
+            const messagesLink = document.querySelector('a[href="messages.html"]');
+            if (messagesLink) {
+                messagesLink.addEventListener('mouseenter', preloadMessagesData);
+                messagesLink.addEventListener('touchstart', preloadMessagesData);
+            }
+        });
         
         // Function to display logs in the table
         function displayLogs(logs) {
@@ -564,16 +797,28 @@
                 return;
             }
             
-            // Filter logs by date range
+            // Filter logs by date range - IMPROVED DATE HANDLING
             const filteredLogs = allLogs.filter(log => {
+                // Create date object from log timestamp
                 const logDate = new Date(log.timestamp);
                 
                 if (startDate && endDate) {
-                    return logDate >= new Date(startDate) && logDate <= new Date(endDate + 'T23:59:59');
+                    // Create properly formatted date objects for comparison
+                    const startDateObj = new Date(startDate);
+                    startDateObj.setHours(0, 0, 0, 0); // Start of day
+                    
+                    const endDateObj = new Date(endDate);
+                    endDateObj.setHours(23, 59, 59, 999); // End of day
+                    
+                    return logDate >= startDateObj && logDate <= endDateObj;
                 } else if (startDate) {
-                    return logDate >= new Date(startDate);
+                    const startDateObj = new Date(startDate);
+                    startDateObj.setHours(0, 0, 0, 0);
+                    return logDate >= startDateObj;
                 } else if (endDate) {
-                    return logDate <= new Date(endDate + 'T23:59:59');
+                    const endDateObj = new Date(endDate);
+                    endDateObj.setHours(23, 59, 59, 999);
+                    return logDate <= endDateObj;
                 }
                 
                 return true;
@@ -584,15 +829,17 @@
         
         // Function to clear all logs with confirmation
         function clearAllLogs() {
-            // Show a more specific confirmation message
-            if (confirm('Are you sure you want to clear all message logs for Shashikala? This action cannot be undone.')) {
+            // Get the current faculty name from localStorage
+            const facultyName = localStorage.getItem('currentFaculty') || "Unknown";
+            
+            // Show a specific confirmation message with faculty name
+            if (confirm(`WARNING: You are about to delete ALL communication data for faculty "${facultyName}". This action cannot be undone and the deleted data cannot be retrieved. Do you want to proceed?`)) {
                 // Show loading indicator
                 document.getElementById('loadingIndicator').style.display = 'block';
                 document.getElementById('tableContainer').style.display = 'none';
                 
-                // Clear logs from the correct Firebase path for this faculty
-                const FACULTY_NAME = "Shashikala";
-                database.ref(`faculty/${FACULTY_NAME}`).remove()
+                // UPDATED: Only delete the communications node, not the entire faculty node
+                database.ref(`faculty/${facultyName}/communications`).remove()
                     .then(() => {
                         // Clear local data too
                         allLogs = [];
@@ -602,13 +849,13 @@
                         document.getElementById('loadingIndicator').style.display = 'none';
                         displayLogs(allLogs);
                         
-                        // Show a specific success message
-                        alert(`Message logs for faculty ${FACULTY_NAME.replace('_', ' ')} have been successfully cleared.`);
+                        // Show a specific success message with faculty name
+                        alert(`All communication data for faculty "${facultyName}" has been successfully deleted.`);
                     })
                     .catch(error => {
                         console.error('Error clearing logs:', error);
                         document.getElementById('loadingIndicator').style.display = 'none';
-                        alert(`Error clearing message logs: ${error.message}. Please try again later.`);
+                        alert(`Error clearing communication data: ${error.message}. Please try again later.`);
                     });
             }
         }
@@ -627,18 +874,15 @@
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             
-            // Create dynamic filename based on date range
-            let filename = 'message_logs';
+            // NEW: Get current date for filename in DD/MM/YY format
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = String(today.getFullYear()).slice(-2);
+            const currentDate = `${day}/${month}/${year}`;
             
-            if (startDate && endDate) {
-                filename = `message_logs_${startDate}_to_${endDate}`;
-            } else if (startDate) {
-                filename = `message_logs_from_${startDate}`;
-            } else if (endDate) {
-                filename = `message_logs_until_${endDate}`;
-            }
-            
-            filename += '.pdf';
+            // Use current date as filename instead of message_logs
+            let filename = currentDate.replace(/\//g, '-');
             
             // Get filtered logs
             const filteredLogs = getCurrentFilteredLogs();
@@ -707,10 +951,16 @@
                 const row = document.createElement('tr');
                 row.style.backgroundColor = index % 2 === 0 ? 'white' : '#f9f9f9';
                 
-                const timestamp = new Date(log.timestamp).toLocaleString();
+                // UPDATED: Format date without time for PDF - only date in DD/MM/YYYY format
+                const date = new Date(log.timestamp);
+                const formattedDate = date.toLocaleDateString('en-GB', { 
+                    day: '2-digit', 
+                    month: '2-digit', 
+                    year: 'numeric' 
+                });
                 
                 [
-                    timestamp,
+                    formattedDate, // Using formattedDate instead of timestamp with time
                     log.sender || 'System',
                     log.recipient || 'N/A',
                     log.studentName || 'N/A',
@@ -748,14 +998,14 @@
             footer.style.marginTop = '20px';
             footer.style.borderTop = '1px solid #ddd';
             footer.style.paddingTop = '10px';
-            footer.textContent = `Generated on ${new Date().toLocaleString()} - Total Records: ${filteredLogs.length}`;
+            footer.textContent = `Generated on ${currentDate} - Total Records: ${filteredLogs.length}`;
             
             pdfContent.appendChild(footer);
             
             // Enhanced PDF export options with dynamic filename
             const opt = {
                 margin: [10, 10, 10, 10],
-                filename: filename, // Use the dynamic filename
+                filename: filename + '.pdf', // Use current date as filename
                 image: { type: 'jpeg', quality: 1.0 },
                 html2canvas: { 
                     scale: 2,
@@ -795,16 +1045,28 @@
                 return allLogs;
             }
             
-            // Filter logs by date range
+            // Filter logs by date range - IMPROVED DATE HANDLING
             return allLogs.filter(log => {
+                // Create date object from log timestamp
                 const logDate = new Date(log.timestamp);
                 
                 if (startDate && endDate) {
-                    return logDate >= new Date(startDate) && logDate <= new Date(endDate + 'T23:59:59');
+                    // Create properly formatted date objects for comparison
+                    const startDateObj = new Date(startDate);
+                    startDateObj.setHours(0, 0, 0, 0); // Start of day
+                    
+                    const endDateObj = new Date(endDate);
+                    endDateObj.setHours(23, 59, 59, 999); // End of day
+                    
+                    return logDate >= startDateObj && logDate <= endDateObj;
                 } else if (startDate) {
-                    return logDate >= new Date(startDate);
+                    const startDateObj = new Date(startDate);
+                    startDateObj.setHours(0, 0, 0, 0);
+                    return logDate >= startDateObj;
                 } else if (endDate) {
-                    return logDate <= new Date(endDate + 'T23:59:59');
+                    const endDateObj = new Date(endDate);
+                    endDateObj.setHours(23, 59, 59, 999);
+                    return logDate <= endDateObj;
                 }
                 
                 return true;

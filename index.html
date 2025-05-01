@@ -10,7 +10,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Login System</title>
+    <title>StudentConnect</title>
 
     <link rel="stylesheet" href="styles.css">
 
@@ -34,6 +34,7 @@
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <!-- Service Worker Registration -->
     <script>
@@ -53,204 +54,229 @@
 </head>
 
 <style>
+    :root {
+        --primary-color: #237a4e;
+        --primary-light: #2d9a64;
+        --text-color: #2d3748;
+        --text-light: #718096;
+        --background: #f8fafc;
+        --white: #ffffff;
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
     body {
-
-    font-family: Arial, sans-serif;
-
-    background-color: #f0f0f0;
-
-    margin: 0;
-
-    padding: 0;
-
-}
-
-
+        font-family: 'Inter', sans-serif;
+        background-color: var(--background);
+        color: var(--text-color);
+        line-height: 1.6;
+    }
 
 .container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+    }
 
-    max-width: 400px;
+    .auth-container {
+        background: var(--white);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 420px;
+        padding: 2.5rem;
+        transition: all 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
 
-    margin: 50px auto;
+    .auth-container::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+        background-size: 400%;
+        border-radius: 18px;
+        z-index: -1;
+        animation: rainbow-border 20s linear infinite;
+        opacity: 0.5;
+    }
 
-    padding: 20px;
+    @keyframes rainbow-border {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
 
-    background-color: #ffffff;
+    .auth-container::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: var(--white);
+        border-radius: 16px;
+        z-index: -1;
+    }
 
-    border-radius: 8px;
-
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-
-}
-
-
-
-.gnilogo {
-
+    .logo-container {
     text-align: center;
+        margin-bottom: 2rem;
+    }
 
-    margin-bottom: 20px;
-
-}
-
-
-
-.gnilogo img {
-
-    max-width: 100%;
-
+    .logo-container img {
+        max-width: 180px;
     height: auto;
-
 }
 
-
-
-h2 {
-
+    .form-title {
     text-align: center;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        color: var(--text-color);
+    }
 
-    color: #333;
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
 
-}
-
-
-
-input[type="email"],
-
-input[type="password"] {
-
+    .input-field {
     width: 100%;
+        padding: 0.875rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
 
-    padding: 10px;
+    .input-field:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(35, 122, 78, 0.1);
+    }
 
-    margin: 10px 0;
+    .password-container {
+        position: relative;
+    }
 
-    border: 1px solid #ddd;
+    .password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-light);
+        cursor: pointer;
+        transition: color 0.3s ease;
+    }
 
-    border-radius: 4px;
+    .password-toggle:hover {
+        color: var(--primary-color);
+    }
 
-    box-sizing: border-box;
+    .remember-me {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
 
-}
+    .remember-me input[type="checkbox"] {
+        margin-right: 0.5rem;
+    }
 
-
-
-button {
-
+    .btn {
     width: 100%;
-
-    padding: 10px;
-
-    background-color: #237a4e;
-
-    color: white;
-
+        padding: 0.875rem;
+        background-color: var(--primary-color);
+        color: var(--white);
     border: none;
-
-    border-radius: 4px;
-
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 500;
     cursor: pointer;
+        transition: all 0.3s ease;
+    }
 
-    font-size: 16px;
+    .btn:hover {
+        background-color: var(--primary-light);
+    }
 
-}
-
-
-
-
-
-
-
-p {
-
+    .form-footer {
     text-align: center;
-
-    margin-top: 15px;
-
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
 }
 
-
-
-a {
-
-    color: #4CAF50;
-
+    .form-footer a {
+        color: var(--primary-color);
     text-decoration: none;
-
+        font-weight: 500;
+        transition: color 0.3s ease;
 }
 
-
-
-a:hover {
-
+    .form-footer a:hover {
     text-decoration: underline;
+    }
 
-}
+    .form-switch {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+    }
 
+    .form-switch a {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.3s ease;
+    }
 
+    .form-switch a:hover {
+        text-decoration: underline;
+    }
 
 #registerForm,
-
 #resetPasswordForm {
-
     display: none;
+    }
 
-}
-
-
-
-.password-container {
-
-    position: relative;
-
-    width: 100%;
-
-}
-
-
-
-.password-container input[type="password"],
-
-.password-container input[type="text"] {
-
-    width: 100%;
-
-    padding: 10px;
-
-    padding-right: 35px; /* Make room for the icon */
-
-    box-sizing: border-box;
-
-}
-
-
-
-.password-toggle {
-
-    position: absolute;
-
-    right: 10px;
-
-    top: 50%;
-
-    transform: translateY(-50%);
-
-    cursor: pointer;
-
-    z-index: 1;
-
-}
-
+    @media (max-width: 480px) {
+        .container {
+            padding: 1rem;
+        }
+        
+        .auth-container {
+            padding: 1.5rem;
+        }
+    }
 </style>
 
 <body>
 
     <div class="container">
 
-        <div class="gnilogo">
+        <div class="auth-container">
 
-            <img src='https://i.postimg.cc/Xqp2r5bL/download-2.jpg' border='0' alt='download-2' />
+            <div class="logo-container">
+
+                <img src="images/brandlogo.png" alt="StudentConnect Logo">
 
         </div>
 
@@ -260,13 +286,17 @@ a:hover {
 
             <div id="loginForm">
 
-                <h2>Login</h2>
+                    <h2 class="form-title">Welcome Back</h2>
 
-                <input type="email" id="loginEmail" placeholder="Email" required>
+                    <div class="form-group">
 
-                <div class="password-container">
+                        <input type="email" id="loginEmail" class="input-field" placeholder="Email" required>
 
-                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    </div>
+
+                    <div class="form-group password-container">
+
+                        <input type="password" id="loginPassword" class="input-field" placeholder="Password" required>
 
                     <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility()"></i>
 
@@ -280,65 +310,105 @@ a:hover {
 
                 </div>
 
-                <button onclick="login()">Login</button>
+                    <button class="btn" onclick="login()">Sign In</button>
 
-                <!-- <p>Don't have an account? <a href="#" onclick="showRegister()">Register</a></p> -->
+                    <div class="form-footer">
 
-                <p><a href="#" onclick="showResetPassword()">Forgot Password?</a></p>
+                        <a href="#" onclick="showResetPassword()">Forgot Password?</a>
 
-            </div>
+                    </div>
 
+                    <div class="form-switch">
 
+                        Don't have an account? <a href="#" onclick="showRegister()">Sign Up</a>
 
-            <div id="registerForm" style="display: none;">
-
-                <h2>Register</h2>
-
-                <input type="email" id="registerEmail" placeholder="Email" required>
-
-                <input type="password" id="registerPassword" placeholder="Password" required>
-
-                <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-
-                <button onclick="register()">Register</button>
-
-                <p>Already have an account? <a href="#" onclick="showLogin()">Login</a></p>
+                    </div>
 
             </div>
 
 
 
-            <div id="resetPasswordForm" style="display: none;">
+                <div id="registerForm">
 
-                <h2>Reset Password</h2>
+                    <h2 class="form-title">Create Account</h2>
 
-                <input type="email" id="resetEmail" placeholder="Email" required>
+                    <div class="form-group">
 
-                <button onclick="resetPassword()">Send Reset Link</button>
+                        <input type="email" id="registerEmail" class="input-field" placeholder="Email" required>
 
-                <p><a href="#" onclick="showLogin()">Back to Login</a></p>
+                    </div>
+
+                    <div class="form-group password-container">
+
+                        <input type="password" id="registerPassword" class="input-field" placeholder="Password" required>
+
+                        <i class="fas fa-eye password-toggle" onclick="toggleRegisterPasswordVisibility()"></i>
+
+                    </div>
+
+                    <div class="form-group password-container">
+
+                        <input type="password" id="confirmPassword" class="input-field" placeholder="Confirm Password" required>
+
+                        <i class="fas fa-eye password-toggle" onclick="toggleConfirmPasswordVisibility()"></i>
+
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" id="registerName" class="input-field" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="registerSection" class="input-field" placeholder="Enter your section" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="registerStudentData" class="input-field" placeholder="Input student data">
+                    </div>
+
+                    <button class="btn" onclick="register()">Sign Up</button>
+
+                    <div class="form-switch">
+
+                        Already have an account? <a href="#" onclick="showLogin()">Sign In</a>
+
+                    </div>
+
+            </div>
+
+
+
+                <div id="resetPasswordForm">
+
+                    <h2 class="form-title">Reset Password</h2>
+
+                    <div class="form-group">
+
+                        <input type="email" id="resetEmail" class="input-field" placeholder="Email" required>
+
+                    </div>
+
+                    <button class="btn" onclick="resetPassword()">Send Reset Link</button>
+
+                    <div class="form-switch">
+
+                        <a href="#" onclick="showLogin()">Back to Sign In</a>
+
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
-
-
-
-        <div id="sectionContainer" style="display: none;"></div>
 
     </div>
 
 
 
     <script type="module">
-
         // Import the functions you need from the SDKs you need
-
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
-
-
+        import { getDatabase, ref, set, get } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -347,305 +417,296 @@ a:hover {
   projectId: "collegeapp-59309",
   storageBucket: "collegeapp-59309.firebasestorage.app",
   messagingSenderId: "298826677970",
-  appId: "1:298826677970:web:3989fed84dd5bb4d73f70b"
+            appId: "1:298826677970:web:3989fed84dd5bb4d73f70b",
+            databaseURL: "https://collegeapp-59309-default-rtdb.firebaseio.com/"
 };
 
-
-
         // Initialize Firebase
-
         const app = initializeApp(firebaseConfig);
-
         const auth = getAuth(app);
+        const database = getDatabase(app);
 
-
-
-        // Modify the checkRememberedEmail function
-
-        function checkRememberedCredentials() {
-
-            const rememberedEmail = localStorage.getItem('rememberedEmail');
-
-            const rememberedPassword = localStorage.getItem('rememberedPassword');
-
-            if (rememberedEmail) {
-
-                document.getElementById('loginEmail').value = rememberedEmail;
-
-            }
-
-            if (rememberedPassword) {
-
-                document.getElementById('loginPassword').value = rememberedPassword;
-
-                document.getElementById('rememberMe').checked = true;
-
-            }
-
-        }
-
-
-
-        // Call this function when the page loads
-
-        checkRememberedCredentials();
-
-
-
-        // Add this function to attempt auto-login when page loads
-
-        function attemptAutoLogin() {
-
-            const rememberedEmail = localStorage.getItem('rememberedEmail');
-
-            const rememberedPassword = localStorage.getItem('rememberedPassword');
-
-            const userToken = localStorage.getItem('userToken');
-
-            
-
-            // If we have remembered credentials and the user was previously logged in
-
-            if (rememberedEmail && rememberedPassword && userToken) {
-
-                console.log("Auto-login attempt with stored credentials");
-
-                
-
-                // Attempt login with stored credentials
-
-                signInWithEmailAndPassword(auth, rememberedEmail, rememberedPassword)
-
-                    .then((userCredential) => {
-
-                        const user = userCredential.user;
-
-                        console.log("Auto-login successful:", user);
-
-                        // Redirect to webapp.html
-
-                        window.location.href = "webapp.html";
-
-                    })
-
-                    .catch((error) => {
-
-                        console.error("Auto-login failed:", error.message);
-
-                        // Continue with regular login page if auto-login fails
-
-                        // No need to show an error as this is a background process
-
-                    });
-
-            }
-
-        }
-
-
-
-        // Run auto-login attempt after the page loads
-
-        document.addEventListener('DOMContentLoaded', attemptAutoLogin);
-
-
-
-        window.login = function() {
-
-            const email = document.getElementById('loginEmail').value;
-
-            const password = document.getElementById('loginPassword').value;
-
-            const rememberMe = document.getElementById('rememberMe').checked;
-
-
-
-            if (rememberMe) {
-
-                localStorage.setItem('rememberedEmail', email);
-
-                localStorage.setItem('rememberedPassword', password);
-
-            } else {
-
-                localStorage.removeItem('rememberedEmail');
-
-                localStorage.removeItem('rememberedPassword');
-
-            }
-
-
-
-            signInWithEmailAndPassword(auth, email, password)
-
-                .then((userCredential) => {
-
-                    const user = userCredential.user;
-
-                    console.log("User logged in:", user);
-
-                    // Store the user token in localStorage
-
-                    localStorage.setItem('userToken', user.uid);
-
-                    // Redirect to webapp.html
-
-                    window.location.href = "webapp.html";
-
-                })
-
-                .catch((error) => {
-
-                    console.error("Login error:", error.message);
-
-                    alert("Login failed: " + error.message);
-
-                });
-
-        }
-
-
-
-        // Add this function for password visibility toggle
-
+        // Password visibility toggle functions
         window.togglePasswordVisibility = function() {
-
             const passwordInput = document.getElementById('loginPassword');
-
             const toggleIcon = document.querySelector('.password-toggle');
-
             
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        window.toggleRegisterPasswordVisibility = function() {
+            const passwordInput = document.getElementById('registerPassword');
+            const toggleIcon = document.querySelectorAll('.password-toggle')[1];
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        window.toggleConfirmPasswordVisibility = function() {
+            const passwordInput = document.getElementById('confirmPassword');
+            const toggleIcon = document.querySelectorAll('.password-toggle')[2];
 
             if (passwordInput.type === 'password') {
-
                 passwordInput.type = 'text';
-
                 toggleIcon.classList.remove('fa-eye');
-
                 toggleIcon.classList.add('fa-eye-slash');
-
             } else {
-
                 passwordInput.type = 'password';
-
                 toggleIcon.classList.remove('fa-eye-slash');
-
                 toggleIcon.classList.add('fa-eye');
-
             }
-
         }
 
-
-
+        // Registration function
         window.register = function() {
-
             const email = document.getElementById('registerEmail').value;
-
             const password = document.getElementById('registerPassword').value;
-
             const confirmPassword = document.getElementById('confirmPassword').value;
+            const name = document.getElementById('registerName').value;
+            const section = document.getElementById('registerSection').value;
+            const studentDataRaw = document.getElementById('registerStudentData').value;
 
-
-
+            // Validate password match
             if (password !== confirmPassword) {
-
                 alert("Passwords do not match!");
-
                 return;
-
+            }
+            // Validate password strength
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters long!");
+                return;
+            }
+            // Validate name and section
+            if (!name.trim()) {
+                alert("Please enter your name.");
+                return;
+            }
+            if (!section.trim()) {
+                alert("Please enter your section.");
+                return;
             }
 
+            // Parse student data as JSON array
+            let studentDataArray = [];
+            if (studentDataRaw.trim()) {
+                try {
+                    studentDataArray = eval(studentDataRaw); // Accepts array-like input (e.g., pasted JS array)
+                    if (!Array.isArray(studentDataArray)) throw new Error();
+                } catch (e) {
+                    alert("Student data must be a valid JavaScript array of objects. Example: [ { rollNumber: '...', name: '...', ... }, ... ]");
+                    return;
+                }
+            }
 
+            // Transform student data array to object with roll numbers as keys
+            const studentData = {};
+            for (const student of studentDataArray) {
+                if (!student.rollNumber) {
+                    alert("Each student object must have a rollNumber property.");
+                    return;
+                }
+                studentData[student.rollNumber] = student;
+            }
 
             createUserWithEmailAndPassword(auth, email, password)
-
                 .then((userCredential) => {
-
                     const user = userCredential.user;
-
-                    console.log("User registered:", user);
-
+                    // Store all faculty data under their name
+                    set(ref(database, 'faculty/' + name), {
+                        email: email,
+                        password: password, // Storing as requested (not secure)
+                        section: section,
+                        studentData: studentData
+                    })
+                    .then(() => {
+                        console.log("Faculty data saved to database");
                     alert("Registration successful! Please log in.");
-
+                        showLogin();
+                    })
+                    .catch((error) => {
+                        console.error("Error saving faculty data:", error);
+                        alert("Registration successful, but there was an error saving additional data.");
                     showLogin();
-
+                    });
                 })
-
                 .catch((error) => {
-
-                    console.error("Registration error:", error.message);
-
-                    alert("Registration failed: " + error.message);
-
+                    console.error("Registration error:", error);
+                    let errorMessage = "Registration failed: ";
+                    switch(error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMessage += "Email is already in use.";
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage += "Invalid email address.";
+                            break;
+                        case 'auth/operation-not-allowed':
+                            errorMessage += "Email/password accounts are not enabled.";
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage += "Password is too weak.";
+                            break;
+                        default:
+                            errorMessage += error.message;
+                    }
+                    alert(errorMessage);
                 });
-
         }
 
+        // Login function
+        window.login = function() {
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
 
+            if (rememberMe) {
+                localStorage.setItem('rememberedEmail', email);
+                localStorage.setItem('rememberedPassword', password);
+            } else {
+                localStorage.removeItem('rememberedEmail');
+                localStorage.removeItem('rememberedPassword');
+            }
 
+            signInWithEmailAndPassword(auth, email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    
+                    // Find faculty name by email
+                    const facultyRef = ref(database, 'faculty');
+                    const dbRef = ref(database);
+                    
+                    // Get all faculty members and find the one matching this email
+                    get(facultyRef).then((snapshot) => {
+                        if (snapshot.exists()) {
+                            let facultyName = null;
+                            snapshot.forEach((facultySnapshot) => {
+                                const faculty = facultySnapshot.val();
+                                if (faculty.email === email) {
+                                    facultyName = facultySnapshot.key;
+                                    // Store faculty name in localStorage
+                                    localStorage.setItem('currentFaculty', facultyName);
+                                    console.log("Found faculty:", facultyName);
+                                }
+                            });
+                            
+                            if (!facultyName) {
+                                console.warn("Could not find faculty with email:", email);
+                            }
+                            
+                            // Redirect to webapp.html regardless
+                            window.location.href = "webapp.html";
+                        } else {
+                            console.warn("No faculty data found");
+                            window.location.href = "webapp.html";
+                        }
+                    }).catch((error) => {
+                        console.error("Error finding faculty:", error);
+                        window.location.href = "webapp.html";
+                    });
+                })
+                .catch((error) => {
+                    console.error("Login error:", error);
+                    let errorMessage = "Login failed: ";
+                    
+                    switch(error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage += "No user found with this email.";
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage += "Incorrect password.";
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage += "Invalid email address.";
+                            break;
+                        case 'auth/user-disabled':
+                            errorMessage += "This account has been disabled.";
+                            break;
+                        default:
+                            errorMessage += error.message;
+                    }
+                    
+                    alert(errorMessage);
+                });
+        }
+
+        // Password reset function
         window.resetPassword = function() {
-
             const email = document.getElementById('resetEmail').value;
 
-
-
             sendPasswordResetEmail(auth, email)
-
                 .then(() => {
-
                     alert("Password reset email sent. Check your inbox.");
-
                     showLogin();
-
                 })
-
                 .catch((error) => {
-
-                    console.error("Password reset error:", error.message);
-
-                    alert("Password reset failed: " + error.message);
-
+                    console.error("Password reset error:", error);
+                    let errorMessage = "Password reset failed: ";
+                    
+                    switch(error.code) {
+                        case 'auth/user-not-found':
+                            errorMessage += "No user found with this email.";
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage += "Invalid email address.";
+                            break;
+                        default:
+                            errorMessage += error.message;
+                    }
+                    
+                    alert(errorMessage);
                 });
-
         }
 
-
-
+        // Form visibility functions
         window.showLogin = function() {
-
             document.getElementById('loginForm').style.display = 'block';
-
             document.getElementById('registerForm').style.display = 'none';
-
             document.getElementById('resetPasswordForm').style.display = 'none';
-
         }
-
-
 
         window.showRegister = function() {
-
             document.getElementById('loginForm').style.display = 'none';
-
             document.getElementById('registerForm').style.display = 'block';
-
             document.getElementById('resetPasswordForm').style.display = 'none';
-
         }
-
-
 
         window.showResetPassword = function() {
-
             document.getElementById('loginForm').style.display = 'none';
-
             document.getElementById('registerForm').style.display = 'none';
-
             document.getElementById('resetPasswordForm').style.display = 'block';
-
         }
 
+        // Check for remembered credentials
+        function checkRememberedCredentials() {
+            const rememberedEmail = localStorage.getItem('rememberedEmail');
+            const rememberedPassword = localStorage.getItem('rememberedPassword');
+            
+            if (rememberedEmail) {
+                document.getElementById('loginEmail').value = rememberedEmail;
+            }
+            
+            if (rememberedPassword) {
+                document.getElementById('loginPassword').value = rememberedPassword;
+                document.getElementById('rememberMe').checked = true;
+            }
+        }
+
+        // Call this function when the page loads
+        checkRememberedCredentials();
     </script>
 
     <script src="scripts.js"></script>

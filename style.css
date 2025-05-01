@@ -85,6 +85,10 @@ body {
   min-height: 100vh;
 }
 
+body.popup-active {
+  overflow: hidden; /* Prevent potential scrollbar flicker/layout shifts */
+}
+
 .container {
   max-width: 600px;
   margin: 0 auto;
@@ -1201,4 +1205,131 @@ textarea {
 .nav-item.active {
   color: var(--primary-green);
   font-weight: 500;
+}
+
+.call-status-overlay, .reason-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0; /* Start hidden for fade-in */
+  transition: opacity 0.3s ease-out;
+  pointer-events: none; /* Allow clicks through when hidden */
+}
+
+.call-status-popup, .reason-popup {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background-color: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  text-align: center;
+  border: 1px solid #e0e0e0;
+  max-width: 380px; /* Adjust max-width as needed */
+  box-sizing: border-box;
+  opacity: 0; /* Start hidden for fade-in */
+  transform: translate(-50%, -45%); /* Start slightly up for animation */
+  transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+  pointer-events: none; /* Allow clicks through when hidden */
+}
+
+/* Styles for when the popups/overlays are shown */
+.call-status-overlay.visible,
+.call-status-popup.visible,
+.reason-overlay.visible,
+.reason-popup.visible {
+  opacity: 1;
+  transform: translate(-50%, -50%); /* Center popup */
+  pointer-events: auto; /* Enable interaction */
+}
+
+/* Keep reason popup specific styles if needed */
+.reason-popup {
+ max-width: 400px;
+ width: 90%;
+}
+
+/* Button styles (keep as they were or move here) */
+.call-status-btn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 12px 0;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+  flex: 1;
+  letter-spacing: 0.5px;
+  min-width: 100px;
+}
+.call-status-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.call-status-btn.yes-btn { background-color: #2ecc71; }
+.call-status-btn.yes-btn:hover { background-color: #27ae60; }
+.call-status-btn.no-btn { background-color: #e74c3c; }
+.call-status-btn.no-btn:hover { background-color: #c0392b; }
+
+/* Reason button styles */
+.reason-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 0;
+  margin: 8px 0;
+  width: 100%;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.25s ease;
+}
+.reason-btn:hover {
+  background-color: #2980b9;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.reason-form {
+  /* display: none; */ /* Control display via JS */
+  margin-top: 15px;
+}
+.reason-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1em;
+  margin-bottom: 15px;
+  resize: vertical;
+  min-height: 80px;
+  box-sizing: border-box; /* Added for better width calculation */
+}
+.submit-btn {
+  background-color: #2ecc71;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1em;
+  font-weight: 500;
+  transition: all 0.25s ease;
+}
+.submit-btn:hover {
+  background-color: #27ae60;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }

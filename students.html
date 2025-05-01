@@ -1,243 +1,80 @@
 <!DOCTYPE html>
-
-<html>
-
+<html lang="en">
 <head>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Roll Numbers and Names</title>
-
   <style>
-
-    /* Table Styles */
-
-    /* General Styles */
-
-body {
-
-  margin: 0;
-
-  padding: 20px;
-
-  font-family: Arial, sans-serif;
-
-  background-color: #f9f9f9;
-
-}
-
-
-
-/* Table Styles */
-
-table {
-
-  width: 100%;
-
-  border-collapse: collapse;
-
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-
-  border-radius: 5px;
-
-  overflow: hidden; /* Ensures rounded corners */
-
-}
-
-
-
-th, td {
-
-  padding: 15px;
-
-  text-align: left;
-
-  border-bottom: 1px solid #ddd;
-
-}
-
-
-
-th {
-
-  background-color: #007BFF; /* Primary color */
-
-  color: white;
-
-  font-weight: bold;
-
-}
-
-
-
-tr:hover {
-
-  background-color: #f1f1f1; /* Light gray on hover */
-
-}
-
-
-
-/* Responsive Styles */
-
-@media (max-width: 767px) {
-
-  table {
-
-    font-size: 14px;
-
-  }
-
-
-
-  th, td {
-
-    padding: 12px;
-
-  }
-
-}
-
-
-
-@media (max-width: 480px) {
-
-  table {
-
-    font-size: 12px;
-
-  }
-
-
-
-  th, td {
-
-    padding: 10px;
-
-  }
-
-}
-
-/* Add new container styles */
-.table-container {
-    position: fixed;
-    top: 110px; /* Increased to make room for larger controls */
-    left: 0;
-    right: 0;
-    bottom: 60px;
-    overflow-y: auto;
-    background: #ffffff;
-    -webkit-overflow-scrolling: touch;
-}
-
-/* Table styles */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-}
-
-/* Header styles */
-th {
-    position: sticky;
-    top: 0;
-    background-color: #007BFF;
-    color: white;
-    font-size: 28px;  /* Increased header size */
-    padding: 25px 15px;
-    text-align: left;
-    font-weight: 600;
-    z-index: 1;
-}
-
-/* Column styles */
-th:first-child {
-    width: 40%;
-}
-
-th:last-child {
-    width: 60%;
-}
-
-/* Cell styles */
-td {
-    padding: 25px 15px;
-    font-size: 26px;  /* Increased cell text size */
-    border-bottom: 1px solid #e0e0e0;
-}
-
-/* Mobile specific styles */
-@media (max-width: 767px) {
-    /* Roll Number column */
-    td:first-child {
-        color: #000;
-        font-weight: 500;
-        font-size: 26px;  /* Increased roll number size */
+    :root {
+      --primary-color: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-color: #1e293b;
+      --text-light: #64748b;
+      --header-bg: #2563eb;
+      --header-text: #ffffff;
+      --row-hover: #f1f5f9;
+      --row-alt: #f8fafc;
+      /* Add colors for attendance */
+      --error-color: #ef4444; /* Red for low attendance */
+      --warning-color: #f59e0b; /* Orange for medium */
+      --success-color: #10b981; /* Green for high */
+      /* Selection colors */
+      --selection-border: #2563eb;
+      --checkbox-bg: #e2e8f0;
+      --checkbox-checked-bg: #2563eb;
+      --checkbox-tick: #ffffff;
     }
-    
-    /* Name column */
-    td:last-child {
-        color: #000;
-        font-size: 26px;  /* Increased name size */
-    }
-    
-    /* Row sizing */
-    tr {
-        height: calc((100vh - 120px) / 8); /* Showing fewer rows due to larger text */
-        min-height: 100px; /* Increased minimum height */
-    }
-    
-    /* Header text */
-    th {
-        font-size: 28px;  /* Increased header size */
-        padding: 20px 15px;
-    }
-    
-    /* Cell text handling */
-    td {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        padding: 0 15px;
-        line-height: 100px; /* Match with min-height */
-    }
-}
 
-/* Zebra striping */
-tr:nth-child(even) {
-    background-color: #f8f8f8;
-}
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-/* New styles for search bar and controls */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    /* Header and Controls */
 .controls-container {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  background: #f0f0f0;
-  padding: 20px;
+      background: var(--card-bg);
+      padding: 16px;
   display: flex;
   align-items: center;
-  gap: 15px;
-  z-index: 2;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      gap: 12px;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
   height: auto;
 }
 
 .back-button {
-  background: #007BFF;
+      background: var(--primary-color);
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 15px 25px;
-  font-size: 24px;
-  font-weight: bold;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
   cursor: pointer;
-  transition: background 0.3s;
-  min-width: 120px;
+      transition: background 0.2s;
+      min-width: 90px;
   text-align: center;
 }
 
 .back-button:hover {
-  background: #0056b3;
+      background: var(--primary-hover);
 }
 
 .search-container {
@@ -247,426 +84,2630 @@ tr:nth-child(even) {
 
 #searchInput {
   width: 100%;
-  padding: 18px 50px 18px 20px;
-  border: 2px solid #ddd;
+      padding: 12px 40px 12px 16px;
+      border: 2px solid var(--border-color);
   border-radius: 8px;
-  font-size: 24px;
-  box-sizing: border-box;
-  height: 70px;
+      font-size: 16px;
+      height: 48px;
+      transition: border-color 0.2s;
+    }
+
+    #searchInput:focus {
+      outline: none;
+      border-color: var(--primary-color);
 }
 
 .search-icon {
   position: absolute;
-  right: 20px;
+      right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: #666;
-  font-size: 24px;
-}
+      color: var(--text-light);
+      font-size: 18px;
+    }
 
-/* Mobile adjustments for controls */
+    /* Table Container */
+    .table-container {
+      position: fixed;
+      top: 125px; /* Controls height (80px) + Card Header height (~45px) */
+      left: 0;
+      right: 0;
+      bottom: 60px; /* Height of the bottom nav bar */
+      overflow-y: auto;
+      background: var(--card-bg);
+      padding: 0;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* Card Layout for Mobile */
+    .student-list {
+      display: none; /* Hidden by default, shown in mobile view */
+      padding: 12px;
+    }
+
+    .student-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      margin-bottom: 12px;
+      padding: 16px;
+      border-left: 4px solid var(--primary-color);
+      /* Add Flexbox for layout */
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px; /* Add gap between content and percentage */
+      transition: background-color 0.2s; /* Optional: slight background change on hover */
+    }
+
+    /* Add hover effect */
+    .student-card:hover {
+        background-color: var(--row-hover);
+    }
+
+    /* Optional: Indicate card is clickable in selection mode */
+    .selection-mode .student-card {
+        cursor: pointer;
+    }
+
+    /* Container for roll number and name */
+    .student-info {
+        flex-grow: 1; /* Allow this to take available space */
+        min-width: 0; /* Prevent flex item overflow */
+    }
+
+    .roll-number {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+
+    .student-name {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text-color);
+      /* Allow text to wrap if needed */
+      word-break: break-word;
+    }
+
+    /* Style for the new percentage display */
+    .attendance-percentage {
+        font-size: 16px;
+        font-weight: 600;
+        /* Color set dynamically based on percentage */
+        white-space: nowrap; /* Prevent percentage wrapping */
+        flex-shrink: 0; /* Prevent percentage from shrinking */
+        text-align: right; /* Align percentage to the right in table */
+    }
+    /* Attendance Color Classes */
+    .attendance-percentage.attendance-low {
+        color: var(--error-color); 
+    }
+    .attendance-percentage.attendance-medium {
+        color: var(--warning-color);
+    }
+    .attendance-percentage.attendance-high {
+        color: var(--success-color); 
+    }
+
+    /* Table Styles */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--card-bg);
+    }
+
+    th {
+      position: sticky;
+      top: 0;
+      background-color: var(--header-bg);
+      color: var(--header-text);
+      font-size: 16px;
+      padding: 16px;
+      text-align: left;
+      font-weight: 600;
+      z-index: 1;
+      cursor: pointer; /* Add cursor pointer for sort */
+      user-select: none; /* Prevent text selection */
+      transition: background-color 0.2s;
+    }
+    
+    th:hover {
+        background-color: var(--primary-hover, #1d4ed8);
+    }
+
+    /* Sort Indicator Styles */
+    th .sort-icon {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        margin-left: 8px;
+        opacity: 0.6;
+        vertical-align: middle;
+    }
+    th .sort-icon.asc::before {
+        content: '▲'; 
+    }
+    th .sort-icon.desc::before {
+        content: '▼';
+    }
+    th.sorted .sort-icon {
+        opacity: 1;
+    }
+
+    th:first-child {
+      width: 30%; /* Adjusted width */
+      border-right: 1px solid rgba(255,255,255,0.2);
+    }
+    th:nth-child(2) {
+        width: 45%; /* Adjusted width */
+        border-right: 1px solid rgba(255,255,255,0.2);
+    }
+    th:last-child {
+        width: 25%; /* Width for Attendance */
+    }
+
+    td {
+      padding: 16px;
+      font-size: 16px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle; /* Align cell content vertically */
+    }
+
+    td:first-child {
+      font-weight: 500;
+      color: var(--primary-color);
+      border-right: 1px solid var(--border-color);
+      letter-spacing: 0.5px;
+    }
+
+    td:nth-child(2) {
+        font-size: 18px;
+        font-weight: 600;
+        border-right: 1px solid var(--border-color);
+    }
+
+    td:last-child {
+      /* Styles handled by .attendance-percentage */
+    }
+
+    tr:hover {
+      background-color: var(--row-hover);
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--row-alt);
+    }
+
+    /* Responsive Design */
 @media (max-width: 767px) {
+      .table-display {
+        display: none; /* Hide table on mobile */
+      }
+
+      .student-list {
+        display: block; /* Show cards on mobile */
+      }
+
+      .table-container {
+        top: 150px;
+        padding: 8px;
+      }
+
   .controls-container {
-    padding: 15px;
+        padding: 12px;
   }
   
   .back-button {
-    padding: 12px 20px;
-    font-size: 22px;
-    min-width: 100px;
+        padding: 10px 16px;
+        font-size: 15px;
+        min-width: 80px;
   }
   
   #searchInput {
-    padding: 15px 45px 15px 15px;
-    font-size: 22px;
-    height: 65px;
-  }
-  
-  .search-icon {
-    font-size: 22px;
-  }
-  
-  .table-container {
-    top: 95px;
-  }
-}
+        height: 44px;
+        font-size: 15px;
+      }
+    }
 
+    /* Larger Mobile and Tablets */
+    @media (min-width: 480px) and (max-width: 767px) {
+      .roll-number {
+        font-size: 20px;
+      }
+
+      .student-name {
+    font-size: 22px;
+        font-weight: 600;
+      }
+
+      .student-card {
+        padding: 20px;
+      }
+    }
+
+    /* Portrait Orientation Specific */
+    @media (max-height: 500px) {
+      .student-card {
+        padding: 12px;
+        margin-bottom: 8px;
+      }
+
+      .roll-number, .student-name {
+        font-size: 16px;
+      }
+    }
+
+    /* Bottom Navigation Styles (Add these) */
+    .bottom-navbar {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 60px;
+        background-color: var(--card-bg, #ffffff);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        z-index: 1000; /* Ensure it's above other content */
+    }
+
+    .bottom-navbar .nav-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: var(--text-light, #64748b);
+        text-decoration: none;
+        font-size: 12px;
+        flex: 1;
+        text-align: center;
+        padding-top: 6px;
+        padding-bottom: 4px;
+        transition: color 0.2s;
+        position: relative; /* Needed for upload button positioning */
+    }
+
+    .bottom-navbar .nav-item i {
+        font-size: 20px;
+        margin-bottom: 4px;
+    }
+
+    .bottom-navbar .nav-item.active,
+    .bottom-navbar .nav-item:hover {
+        color: var(--primary-color, #2563eb);
+    }
+
+    /* Floating upload button styles */
+    .upload-btn {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        /* No specific styles needed here now, handled by floating div */
+    }
+
+    .floating-upload-btn {
+        position: absolute;
+        bottom: 15px; /* Adjust as needed */
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background-color: var(--primary-color, #2563eb);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+        z-index: 10; /* Above navbar background */
+        cursor: pointer;
+    }
+
+    .floating-upload-btn i {
+        color: white;
+        font-size: 24px;
+        margin: 0; /* Reset margin */
+    }
+
+    .floating-upload-btn:hover,
+    .floating-upload-btn:active {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Adjustments for mobile responsiveness if needed */
+    @media (max-width: 767px) {
+        .table-container {
+            bottom: 60px; /* Ensure padding remains on mobile */
+        }
+        .student-list {
+            padding-bottom: 60px; /* Add padding to card list too */
+        }
+    }
+
+    /* Card List Header Styles (Mobile Only) */
+    .card-list-header {
+        display: none; /* Hidden by default, shown via JS */
+        position: fixed; /* Change from sticky to fixed */
+        top: 80px; /* Align below the fixed controls */
+        left: 0; /* Ensure it spans the width */
+        right: 0; /* Ensure it spans the width */
+        background-color: var(--bg-color, #f8fafc); /* Match body background */
+        padding: 12px 16px;
+        border-bottom: 2px solid var(--border-color, #e2e8f0);
+        z-index: 9; /* Below controls (10) but above cards */
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--text-light, #64748b);
+        user-select: none;
+        display: flex; /* Use flexbox for layout */
+        justify-content: space-between; /* Space out columns */
+        align-items: center;
+    }
+
+    .card-list-header .sortable-header {
+        cursor: pointer;
+        display: inline-flex; /* Align icon with text */
+        align-items: center;
+        gap: 4px; /* Space between text and icon */
+        transition: color 0.2s;
+    }
+    .card-list-header .sortable-header:hover {
+         color: var(--primary-color, #2563eb);
+    }
+    .card-list-header .sortable-header.sorted {
+         color: var(--primary-color, #2563eb);
+         font-weight: 700;
+    }
+    .card-list-header .sort-icon {
+        display: inline-block;
+        width: 1em;
+        height: 1em;
+        opacity: 0.6;
+        vertical-align: middle;
+    }
+    .card-list-header .sort-icon.asc::before { content: '▲'; }
+    .card-list-header .sort-icon.desc::before { content: '▼'; }
+    .card-list-header .sortable-header.sorted .sort-icon {
+        opacity: 1;
+    }
+
+    /* Adjust header column widths (approximate) */
+    .card-header-roll { flex-basis: 30%; }
+    .card-header-name { flex-basis: 45%; flex-grow: 1; text-align: left; padding-left: 10px; }
+    .card-header-attendance { flex-basis: 20%; text-align: right; }
+    /* Add specific indicator for attendance sort */
+    .card-header-attendance.sortable-header {
+        border-bottom: 1px dotted currentColor; /* Add dotted underline */
+        padding-bottom: 2px; /* Adjust padding slightly */
+    }
+
+    /* Style for the checkbox */
+    .selection-checkbox {
+      display: none; /* Hidden by default */
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      margin-right: 15px; /* Space between checkbox and student info */
+      cursor: pointer;
+      flex-shrink: 0; /* Prevent checkbox from shrinking */
+      background-color: var(--checkbox-bg);
+      position: relative;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    /* Show checkbox when selection mode is active */
+    .selection-mode .selection-checkbox {
+      display: block;
+    }
+
+    /* Style for the checked state */
+    .selection-checkbox.checked {
+      background-color: var(--checkbox-checked-bg);
+      border-color: var(--checkbox-checked-bg);
+    }
+
+    /* Tick mark for the checked state */
+    .selection-checkbox.checked::before {
+      content: '';
+      position: absolute;
+      left: 6px;
+      top: 3px;
+      width: 5px;
+      height: 10px;
+      border: solid var(--checkbox-tick);
+      border-width: 0 2px 2px 0;
+      transform: rotate(45deg);
+    }
+
+    /* Send SMS button and selection count */
+    .send-sms-btn,
+    .cancel-selection-btn {
+      display: none; /* Hidden by default */
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      min-width: 90px;
+      text-align: center;
+      margin-left: 12px; /* Space between buttons/count */
+    }
+
+    .cancel-selection-btn {
+        background-color: var(--text-light); /* Grey for cancel */
+    }
+    .cancel-selection-btn:hover {
+        background-color: #4a5568; /* Darker grey */
+    }
+
+    .send-sms-btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .selection-count {
+      display: none; /* Hidden by default */
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-color);
+      margin-left: 12px;
+      margin-right: 12px; /* Add some space to the right */
+    }
+
+    /* Added rule to align selection controls to the right */
+    .selection-controls {
+        display: flex;
+        align-items: center;
+        margin-left: auto; /* Pushes controls to the right */
+    }
+
+    .visible {
+      /* Use inline-flex for items that should sit side-by-side */
+      display: inline-flex !important; 
+      align-items: center;
+    }
+
+    /* SMS modal styles */
+    .sms-modal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: var(--card-bg);
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      padding: 25px 30px;
+      width: 90%;
+      max-width: 500px;
+      z-index: 1000;
+      border: 2px solid #8b5cf6;
+      animation: fadeIn 0.3s ease-out;
+      transition: all 0.3s ease;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -48%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+
+    .sms-modal.visible { 
+      display: block;
+    }
+
+    .sms-modal .sms-header {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-align: center;
+      color: var(--text-color);
+      display: none; /* Hide the header as per screenshot */
+    }
+
+    .sms-modal .sms-recipients {
+      display: none;
+    }
+
+    .sms-modal .sms-message {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      font-size: 16px;
+      margin-bottom: 25px;
+      resize: none;
+      height: 150px;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+      color: var(--text-color);
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .sms-modal .sms-message:focus {
+      outline: none;
+      border-color: #8b5cf6;
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+    }
+
+    .sms-modal .sms-message::placeholder {
+      color: #a0aec0;
+      font-size: 18px;
+    }
+
+    .sms-modal .sms-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    .sms-modal .sms-button {
+      background-color: #059669;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 25px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+      min-width: 150px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .sms-modal .sms-button:hover {
+      background-color: #047857;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .sms-modal .sms-button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .sms-modal .sms-close-btn {
+      background-color: transparent;
+      color: #64748b;
+      border: 1px solid #e2e8f0;
+      box-shadow: none;
+    }
+
+    .sms-modal .sms-close-btn:hover {
+      background-color: #f1f5f9;
+      transform: translateY(-2px);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Add a modern backdrop overlay */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(3px);
+      z-index: 999;
+      animation: fadeBackdrop 0.3s ease-out;
+    }
+
+    @keyframes fadeBackdrop {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal-backdrop.visible {
+      display: block;
+    }
+
+    /* Add responsive adjustments for mobile */
+    @media (max-width: 767px) {
+      .sms-modal {
+        padding: 20px;
+        width: 95%;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      
+      .sms-modal .sms-message {
+        height: 120px;
+        font-size: 16px;
+        padding: 12px;
+      }
+      
+      .sms-modal .sms-button {
+        padding: 12px 20px;
+        min-width: 120px;
+        font-size: 15px;
+      }
+      
+      .sms-modal .sms-buttons {
+        margin-top: 15px;
+      }
+    }
+
+    /* Additional adjustments for very small screens */
+    @media (max-width: 350px) {
+      .sms-modal {
+        padding: 15px;
+      }
+      
+      .sms-modal .sms-button {
+        padding: 10px 15px;
+        min-width: 100px;
+        font-size: 14px;
+      }
+      
+      .sms-modal .sms-buttons {
+        gap: 10px;
+      }
+    }
+
+    /* Modal recipient list styles */
+    .recipient-list {
+      margin-top: 10px;
+      margin-bottom: 15px;
+      max-height: 120px;
+      overflow-y: auto;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 8px 12px;
+      background-color: #f8fafc;
+      font-size: 14px;
+      display: none; /* Hidden by default */
+    }
+
+    .recipient-item {
+      padding: 6px 0;
+      border-bottom: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .recipient-item:last-child {
+      border-bottom: none;
+    }
+
+    .recipient-info {
+      font-weight: 500;
+    }
+
+    .recipient-phone {
+      color: #64748b;
+    }
+
+    .show-recipients-btn {
+      margin-bottom: 15px;
+      background: transparent;
+      border: none;
+      color: #3b82f6;
+      font-size: 14px;
+      cursor: pointer;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .show-recipients-btn:hover {
+      text-decoration: underline;
+    }
+
+    .show-recipients-btn i {
+      margin-right: 5px;
+      transition: transform 0.2s;
+    }
+
+    .show-recipients-btn.expanded i {
+      transform: rotate(90deg);
+    }
+
+    /* Helper for equalizing button sizes and icon buttons */
+    .icon-button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Adjust back button to be more compact */
+    .back-button {
+      min-width: 48px;
+      width: auto;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Adjust send-sms button to be more compact */
+    .send-sms-btn {
+      min-width: 48px;
+      width: auto;
+      padding: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    /* Ensure modal stays properly hidden until explicitly shown */
+    .sms-modal.visible { 
+      display: flex !important;
+    }
   </style>
 
-  <!-- Existing meta tags -->
-
   <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-
   <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
-
   <link rel="apple-touch-icon" href="images/favicon.ico">
-
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <!-- Add script.js reference to access student data -->
+  <script src="script.js"></script>
 </head>
 
 <body>
-
-  <!-- New controls container -->
+  <!-- Controls container -->
   <div class="controls-container">
-    <button class="back-button" id="backButton">← Back</button>
+    <button class="back-button" id="backButton" title="Go back"><i class="fas fa-arrow-left"></i></button>
     <div class="search-container">
       <input type="text" id="searchInput" placeholder="Search by roll number or name...">
       <span class="search-icon">🔍</span>
     </div>
+    <!-- Add Student Count Display -->
+    <span id="studentCountDisplay" style="font-size: 14px; color: var(--text-light); margin-left: 10px; white-space: nowrap; font-weight: 600;"></span>
+    <!-- Add Selection Count Display -->
+    <span id="selectionCountDisplay" style="font-size: 14px; color: var(--primary-color); margin-left: 10px; white-space: nowrap; font-weight: 600; display: none;"></span>
+    <!-- Selection Controls (Send SMS button remains, others removed) -->
+    <div class="selection-controls">
+        <!-- Cancel button removed -->
+        <!-- Selection count removed -->
+        <button class="send-sms-btn" id="sendSmsBtn" title="Send SMS to selected students"><i class="fas fa-sms"></i></button>
+    </div>
   </div>
 
+  <!-- Card view header (for mobile) -->
+  <!-- <div id="cardListHeader" class="card-list-header" style="display: none;"> -->
+      <!-- Header content will be generated by JS -->
+  <!-- </div> -->
+
+  <!-- Table view (for desktop/larger screens) -->
   <div class="table-container">
-
+    <div class="table-display">
     <table>
-
       <thead>
-
         <tr>
-
           <th>Roll Number</th>
-
           <th>Name</th>
-
+          <th id="attendanceHeader" style="display: none;">Attendance %</th>
         </tr>
-
       </thead>
-
-      <tbody>
-
-      
+        <tbody id="tableBody">
         <tr>
           <td>22WJ1A04K3</td>
           <td>MOTHI ABHIRAM</td>
+          
         </tr>
         <tr>
           <td>22WJ1A04K4</td>
           <td>MOTTE PUJITHA</td>
+          
         </tr>
         <tr>
           <td>22WJ1A04K5</td>
           <td>MOTTE SATHWIKA</td>
+          <td><span class="attendance-percentage attendance-low">45%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04K6</td>
           <td>MUDDASANI MANISHA</td>
+          <td><span class="attendance-percentage attendance-high">88%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04K7</td>
           <td>MUDIGONDA SINDHUJA</td>
+          <td><span class="attendance-percentage attendance-high">91%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04K8</td>
           <td>MUDRABOINA LAXMI PRASANNA</td>
+          <td><span class="attendance-percentage attendance-medium">65%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04K9</td>
           <td>MUKESH REDDY GUNDA</td>
+          <td><span class="attendance-percentage attendance-high">99%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L0</td>
           <td>MULAMALLA SATHWIK REDDY</td>
+          <td><span class="attendance-percentage attendance-high">85%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L1</td>
           <td>MUMMADI SRINIDHI</td>
+          <td><span class="attendance-percentage attendance-low">30%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L2</td>
           <td>N SREE BHAVANI</td>
+          <td><span class="attendance-percentage attendance-high">92%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L3</td>
           <td>NADIMINTI PRASANTH REDDY</td>
+          <td><span class="attendance-percentage attendance-medium">75%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L4</td>
           <td>NALLAGASU SREEJA</td>
+          <td><span class="attendance-percentage attendance-high">89%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L5</td>
           <td>NALLANA ADITYA</td>
+          <td><span class="attendance-percentage attendance-high">100%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L6</td>
           <td>NAMINDLA CHANDINI</td>
+          <td><span class="attendance-percentage attendance-high">78%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L7</td>
           <td>NANDAGIRI VENKATA RAVIKIRAN</td>
+          <td><span class="attendance-percentage attendance-high">82%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L8</td>
           <td>NAREDLA SRAVANKUMAR</td>
+          <td><span class="attendance-percentage attendance-low">49%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04L9</td>
           <td>NARIVEDDI ASHISH</td>
+          <td><span class="attendance-percentage attendance-high">93%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M0</td>
           <td>NARVA DHEERAJ GOUD</td>
+          <td><span class="attendance-percentage attendance-medium">68%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M1</td>
           <td>NEELAM SRAVANTHI</td>
+          <td><span class="attendance-percentage attendance-high">87%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M2</td>
           <td>NENAVATH AMRUTHA</td>
+          <td><span class="attendance-percentage attendance-high">90%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M3</td>
           <td>NENAVATH SURESH</td>
+          <td><span class="attendance-percentage attendance-high">94%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M4</td>
           <td>NENAVATH TEJA</td>
+          <td><span class="attendance-percentage attendance-low">40%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M5</td>
           <td>NOMULA MAHENDAR</td>
+          <td><span class="attendance-percentage attendance-medium">71%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M6</td>
           <td>NOMULA MAYURI</td>
+          <td><span class="attendance-percentage attendance-high">86%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M7</td>
           <td>OLEPU SAIKUMAR</td>
+          <td><span class="attendance-percentage attendance-high">96%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M8</td>
           <td>ORSU NAVEEN</td>
+          <td><span class="attendance-percentage attendance-high">80%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04M9</td>
           <td>P R S SANTOSH NAIDU</td>
+          <td><span class="attendance-percentage attendance-medium">62%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N0</td>
           <td>P VENKATESHWAR REDDY</td>
+          <td><span class="attendance-percentage attendance-high">97%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N1</td>
           <td>PADALA SAI PRATHYUSHA</td>
+          <td><span class="attendance-percentage attendance-high">81%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N2</td>
           <td>PADAMATI ANUSH REDDY</td>
+          <td><span class="attendance-percentage attendance-low">48%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N3</td>
           <td>PAGIDIMARRI NAVEEN</td>
+          <td><span class="attendance-percentage attendance-high">98%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N4</td>
           <td>PAGIDIPALLI DURGA RAO</td>
+          <td><span class="attendance-percentage attendance-medium">73%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N5</td>
           <td>PALLA SAI TEJA</td>
+          <td><span class="attendance-percentage attendance-high">84%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N6</td>
           <td>PARMESHWAR UPADHYAY</td>
+          <td><span class="attendance-percentage attendance-high">77%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N7</td>
           <td>PATEL UDAY KIRAN REDDY</td>
+          <td><span class="attendance-percentage attendance-high">95%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N8</td>
           <td>PATHURI SANTHOSH REDDY</td>
+          <td><span class="attendance-percentage attendance-medium">66%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04N9</td>
           <td>PENTAPATI HEMANTH KUMAR</td>
+          <td><span class="attendance-percentage attendance-high">83%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P0</td>
           <td>PINNAM HARSHAVARDHAN</td>
+          <td><span class="attendance-percentage attendance-high">88%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P1</td>
           <td>PIPPIRI SHIVAPRASAD</td>
+          <td><span class="attendance-percentage attendance-low">42%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P2</td>
           <td>POLISHETTY SAI KIRAN</td>
+          <td><span class="attendance-percentage attendance-high">91%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P3</td>
           <td>POLWAR OM KRISHNA TEJA</td>
+          <td><span class="attendance-percentage attendance-high">76%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P4</td>
           <td>PONNAGANDLA ROHINI</td>
+          <td><span class="attendance-percentage attendance-high">92%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P5</td>
           <td>POREDDY AVINASH REDDY</td>
+          <td><span class="attendance-percentage attendance-medium">70%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P6</td>
           <td>POTHAGANI KAMALAKAR</td>
+          <td><span class="attendance-percentage attendance-high">85%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P7</td>
           <td>POTHURAJU RAJU</td>
+          <td><span class="attendance-percentage attendance-low">35%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P8</td>
           <td>PUCHAKAYALA SRI CHARAN REDDY</td>
+          <td><span class="attendance-percentage attendance-high">90%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04P9</td>
           <td>PULI ARUN</td>
+          <td><span class="attendance-percentage attendance-medium">60%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q1</td>
           <td>PULI SUPRIYA</td>
+          <td><span class="attendance-percentage attendance-high">94%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q2</td>
           <td>PULLAKANDAM LAXMI VENKATA NARASIMHA SWAMY</td>
+          <td><span class="attendance-percentage attendance-high">89%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q3</td>
           <td>PURAM RAKESH</td>
+          <td><span class="attendance-percentage attendance-high">79%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q4</td>
           <td>PUSULURI MEGHANA</td>
+          <td><span class="attendance-percentage attendance-high">93%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q5</td>
           <td>R ANAND</td>
+          <td><span class="attendance-percentage attendance-medium">55%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q6</td>
           <td>RAGAPURAM PRANAB SAI</td>
+          <td><span class="attendance-percentage attendance-high">96%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q7</td>
           <td>RAMINENI YASWITHA</td>
+          <td><span class="attendance-percentage attendance-high">87%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q8</td>
           <td>RANABOTHU NITHIN REDDY</td>
+          <td><span class="attendance-percentage attendance-high">82%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04Q9</td>
           <td>RANERU NARESH</td>
+          <td><span class="attendance-percentage attendance-low">45%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04R0</td>
           <td>RANGAPPA SAI KIRAN</td>
+          <td><span class="attendance-percentage attendance-high">98%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04R1</td>
           <td>RANGAREDDY LAXMI PRASANNA</td>
+          <td><span class="attendance-percentage attendance-medium">67%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04R2</td>
           <td>RANKIREDDY OM SAI VARSHITHA</td>
+          <td><span class="attendance-percentage attendance-high">91%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04R3</td>
           <td>RAO VIJAY RAO</td>
+          <td><span class="attendance-percentage attendance-high">80%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04R4</td>
           <td>RENUKUNTA NIKHITHA</td>
+          <td><span class="attendance-percentage attendance-high">95%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04R5</td>
           <td>RESHMA</td>
+          <td><span class="attendance-percentage attendance-medium">74%</span></td>
         </tr>
         <tr>
           <td>22WJ1A04R6</td>
           <td>S KRISHNA TEJA</td>
+          <td><span class="attendance-percentage attendance-high">86%</span></td>
         </tr>
         <tr>
           <td>23WJ5A0422</td>
           <td>R BOJA RAJU</td>
+          <td><span class="attendance-percentage attendance-high">99%</span></td>
         </tr>
         <tr>
           <td>23WJ5A0423</td>
           <td>RENA SUKANYA</td>
+          <td><span class="attendance-percentage attendance-low">47%</span></td>
         </tr>
         <tr>
           <td>23WJ5A0424</td>
           <td>SAKINALA KRISHNAGEETHIKA</td>
+          <td><span class="attendance-percentage attendance-high">88%</span></td>
         </tr>
         <tr>
           <td>23WJ5A0425</td>
           <td>SATLA GANESH</td>
+          <td><span class="attendance-percentage attendance-medium">61%</span></td>
         </tr>
         <tr>
           <td>23WJ5A0426</td>
           <td>SHIVVA VINOD KUMAR</td>
+          <td><span class="attendance-percentage attendance-high">92%</span></td>
         </tr>
-
-
       </tbody>
-
     </table>
-
   </div>
 
-  <div class="bottom-navbar">
-    <!-- ... existing navigation ... -->
+    <!-- Card view (for mobile) -->
+    <div class="student-list" id="studentList">
+      <!-- Student cards will be generated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- SMS Modal -->
+  <div class="modal-backdrop" id="smsBackdrop"></div>
+  <div class="sms-modal" id="smsModal">
+      <div class="sms-header">Compose SMS Message</div>
+      <button class="show-recipients-btn" id="showRecipientsBtn">
+        <i class="fas fa-chevron-right"></i> Show recipients
+      </button>
+      <div class="recipient-list" id="recipientList">
+        <!-- Recipients will be populated by JS -->
+      </div>
+      <textarea id="smsMessage" class="sms-message" rows="4" placeholder="Enter Your message here...."></textarea>
+      <div class="sms-buttons">
+          <button class="sms-close-btn sms-button" id="smsCloseBtn">Cancel</button>
+          <button class="sms-button" id="smsClearBtn" style="background-color: #ef4444; margin-right: auto;">Clear</button>
+          <button class="sms-button" id="smsSendBtn">Send</button>
+      </div>
   </div>
 
   <script>
+    // Preload the webapp.html page to improve back button performance
+    let webappHtml;
+    fetch('webapp.html')
+      .then(response => {
+        if (response.ok) {
+          // Cache the page for faster navigation
+          return response.text();
+        }
+      })
+      .catch(error => {
+        console.error('Error preloading webapp.html:', error);
+      });
 
-    function openStudentsPage() {
+    // Handle back button with optimized performance
+    document.getElementById('backButton').addEventListener('click', function(e) {
+      e.preventDefault(); // Prevent default action for smoother transition
+      
+      // Apply active state visual feedback
+      this.style.opacity = '0.8';
+      
+      // Use location.replace for faster back navigation without adding to history
+      window.location.replace('webapp.html');
+    });
 
-  window.open('students.html', '_blank');
+    // Generate card view for mobile - Updated to use real student data from script.js
+    function generateStudentCards() {
+      const studentList = document.getElementById('studentList');
+      const tableRows = document.querySelectorAll('tbody tr');
+      
+      // Check if attendance data should be displayed
+      const showAttendance = localStorage.getItem('showAttendanceData') === 'true';
+      
+      // Clear existing cards
+      studentList.innerHTML = '';
+      
+      // Create cards from table data
+      tableRows.forEach(row => {
+        // Ensure the row is visible (not hidden by search)
+        if (row.style.display === 'none') return; 
 
-}
+        const rollNumber = row.cells[0].textContent;
+        const name = row.cells[1].textContent;
+        // Get percentage from the table cell's span text content
+        const percentageText = row.cells[2].querySelector('.attendance-percentage')?.textContent || '0%';
+        const percentage = parseInt(percentageText.replace('%', '')); // Extract number
+        
+        // Find the actual student data from script.js
+        const studentData = window.students ? students.find(s => s.rollNumber === rollNumber) : null;
+        // Use real parent phone if found, fallback to placeholder if not
+        const parentPhone = studentData ? studentData.parentPhone : getParentPhoneFromRollNumber(rollNumber);
 
+        // Determine attendance class
+        let attendanceClass = 'attendance-high'; // Default
+        if (percentage < 50) {
+            attendanceClass = 'attendance-low';
+        } else if (percentage <= 75) {
+            attendanceClass = 'attendance-medium';
+        }
+        
+        const card = document.createElement('div');
+        card.className = 'student-card';
+        // Store percentage in a data attribute for potential future use
+        card.dataset.percentage = percentage; 
+        // Store all relevant student data as a JSON string
+        const cardStudentData = {
+            rollNumber: rollNumber,
+            name: name,
+            percentage: percentage,
+            parentPhone: parentPhone,
+            parentName: studentData ? studentData.parentName || "" : "",
+            studentPhone: studentData ? studentData.studentPhone || "" : ""
+        };
+        card.dataset.studentData = JSON.stringify(cardStudentData);
 
+        // Check if this card is already selected in our data
+        const isSelected = selectedCardsData.some(data => data.rollNumber === rollNumber);
+        const checkboxClass = isSelected ? 'selection-checkbox checked' : 'selection-checkbox';
 
-// Add this to your existing DOMContentLoaded event listener
-
-document.addEventListener('DOMContentLoaded', function() {
-
-  // ... your existing code ...
-
-
-
-  // Add event listener for the Students button
-
-  document.getElementById('studentsBtn').addEventListener('click', openStudentsPage);
-
-});
-
-// Back button functionality
-document.getElementById('backButton').addEventListener('click', function() {
-  window.location.href = 'webapp.html';
-});
-
-// Search functionality
-document.getElementById('searchInput').addEventListener('input', function() {
-  const searchTerm = this.value.toLowerCase();
-  const tableRows = document.querySelectorAll('tbody tr');
-  
-  tableRows.forEach(row => {
-    const rollNumber = row.querySelector('td:first-child').textContent.toLowerCase();
-    const name = row.querySelector('td:last-child').textContent.toLowerCase();
-    
-    if (rollNumber.includes(searchTerm) || name.includes(searchTerm)) {
-      row.style.display = '';
-    } else {
-      row.style.display = 'none';
+        // Updated card structure with flex container and percentage only shown if uploaded
+        card.innerHTML = `
+          <div class="${checkboxClass}"></div>
+          <div class="student-info">
+            <div class="roll-number">${rollNumber}</div>
+            <div class="student-name">${name}</div>
+          </div>
+          ${showAttendance ? `<div class="attendance-percentage ${attendanceClass}">${percentage}%</div>` : ''}
+        `;
+        
+        // If we're in selection mode and this card is visible, make sure the checkbox is visible too
+        if (isSelectionMode && studentList.classList.contains('selection-mode')) {
+          const checkbox = card.querySelector('.selection-checkbox');
+          if (checkbox) {
+            checkbox.style.display = 'block';
+          }
+        }
+        
+        setupCardSelectionEvents(card);
+        studentList.appendChild(card);
+      });
     }
-  });
-});
 
+    // Helper function for mock data (now primarily for initial load if needed)
+    function generateMockPercentage() {
+        // Keep the logic, might be useful if data isn't loaded yet
+        return Math.floor(Math.random() * (100 - 30 + 1)) + 30; // Random between 30-100
+    }
+
+    // Handle search functionality for both table and cards
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const tableBody = document.getElementById('tableBody');
+        const tableRows = tableBody.querySelectorAll('tr');
+        let visibleCount = 0;
+
+        tableRows.forEach(row => {
+            const rollNumber = row.cells[0].textContent.toLowerCase();
+            const name = row.cells[1].textContent.toLowerCase();
+            // Optionally include percentage in search:
+            // const percentage = row.cells[2].textContent.toLowerCase(); 
+            
+            // if (rollNumber.includes(searchTerm) || name.includes(searchTerm) || percentage.includes(searchTerm)) {
+            if (rollNumber.includes(searchTerm) || name.includes(searchTerm)) {
+                row.style.display = '';
+                visibleCount++;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+      
+        // Regenerate cards based on visible rows AFTER filtering
+        generateStudentCards(); 
+        // Update count display based on search results
+        updateStudentCountDisplay(visibleCount); 
+    });
+
+    // Check screen size and adjust UI on load and resize
+    function checkScreenSize() {
+      const tableDisplay = document.querySelector('.table-display');
+      const cardDisplay = document.querySelector('.student-list');
+      const cardHeader = document.getElementById('cardListHeader');
+
+      if (window.innerWidth <= 767) {
+        tableDisplay.style.display = 'none';
+        cardDisplay.style.display = 'block';
+        cardHeader.style.display = 'flex'; // Use flex for the header
+      } else {
+        tableDisplay.style.display = 'block';
+        cardDisplay.style.display = 'none';
+        cardHeader.style.display = 'none';
+      }
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Script loaded. Checking for student data and Firebase configuration');
+      
+      // Check if Firebase is initialized
+      if (typeof firebase === 'undefined') {
+        console.error('Firebase SDK not loaded properly');
+        alert('Error: Could not connect to the database. Please refresh the page.');
+        return;
+      }
+      
+      // Setup SMS clear button
+      const smsClearBtn = document.getElementById('smsClearBtn');
+      if (smsClearBtn) {
+        smsClearBtn.addEventListener('click', clearAllSmsData);
+      }
+      
+      // Check if attendance data should be displayed
+      const showAttendance = localStorage.getItem('showAttendanceData') === 'true';
+      
+      // Toggle attendance column visibility in table
+      const attendanceHeader = document.getElementById('attendanceHeader');
+      if (attendanceHeader) {
+        attendanceHeader.style.display = showAttendance ? '' : 'none';
+      }
+      
+      // Hide/show attendance percentages in table cells
+      const attendanceSpans = document.querySelectorAll('.attendance-percentage');
+      attendanceSpans.forEach(span => {
+        const cell = span.closest('td');
+        if (cell) {
+          cell.style.display = showAttendance ? '' : 'none';
+        }
+      });
+      
+      // Show loading indicator
+      const loadingIndicator = document.createElement('div');
+      loadingIndicator.className = 'loading-indicator';
+      loadingIndicator.innerHTML = '<div class="spinner"></div><p>Loading student data...</p>';
+      loadingIndicator.style.position = 'fixed';
+      loadingIndicator.style.top = '0';
+      loadingIndicator.style.left = '0';
+      loadingIndicator.style.width = '100%';
+      loadingIndicator.style.height = '100%';
+      loadingIndicator.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+      loadingIndicator.style.display = 'flex';
+      loadingIndicator.style.flexDirection = 'column';
+      loadingIndicator.style.justifyContent = 'center';
+      loadingIndicator.style.alignItems = 'center';
+      loadingIndicator.style.zIndex = '9999';
+      document.body.appendChild(loadingIndicator);
+      
+      // Add spinner styles if not already present
+      if (!document.querySelector('style[data-spinner="true"]')) {
+        const style = document.createElement('style');
+        style.setAttribute('data-spinner', 'true');
+        style.textContent = `
+          .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border-left-color: #2563eb;
+            animation: spin 1s linear infinite;
+            margin-bottom: 10px;
+          }
+          @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+          }
+        `;
+        document.head.appendChild(style);
+      }
+      
+      // Get faculty name from localStorage
+      const facultyName = localStorage.getItem('currentFaculty');
+      console.log("Fetching student data for faculty:", facultyName);
+      
+      if (!facultyName) {
+        console.warn("No faculty name found in localStorage, using default data");
+        // Use existing static data in the table
+        populateInitialPercentages();
+        generateStudentCards();
+        updateStudentCountDisplay();
+        setupSorting();
+        populateCardHeader();
+        setupSmsModalEvents();
+        
+        // Remove loading indicator
+        document.body.removeChild(loadingIndicator);
+        return;
+      }
+      
+      // Reference to the Firebase database
+      const database = firebase.database();
+      
+      // Fetch student data from Firebase for the logged-in faculty
+      database.ref('faculty/' + facultyName + '/studentData').once('value')
+        .then(snapshot => {
+          if (snapshot.exists()) {
+            // Convert Firebase data to array
+            const studentData = snapshot.val();
+            let studentsArray = [];
+            
+            // Handle different data formats (object of objects or array)
+            if (Array.isArray(studentData)) {
+              studentsArray = studentData;
+            } else {
+              studentsArray = Object.values(studentData);
+            }
+            
+            console.log("Loaded student data from Firebase:", studentsArray);
+            
+            // Update global students variable if it exists
+            if (typeof window.students !== 'undefined') {
+              window.students = studentsArray;
+            }
+            
+            // Update the table with Firebase data
+            updateStudentList(studentsArray);
+          } else {
+            console.warn("No student data found for faculty:", facultyName);
+            // Fall back to existing static data
+            populateInitialPercentages();
+            generateStudentCards();
+          }
+        })
+        .catch(error => {
+          console.error("Error fetching student data:", error);
+          // Fall back to existing static data
+          populateInitialPercentages();
+          generateStudentCards();
+        })
+        .finally(() => {
+          // Finish initialization
+          updateStudentCountDisplay();
+          setupSorting();
+          populateCardHeader();
+          setupSmsModalEvents();
+          
+          // Setup SMS-related event listeners
+          const sendSmsBtn = document.getElementById('sendSmsBtn');
+          const smsCloseBtn = document.getElementById('smsCloseBtn');
+          
+          if (sendSmsBtn) sendSmsBtn.addEventListener('click', sendSmsToSelectedParents);
+          if (smsCloseBtn) smsCloseBtn.onclick = function() {
+            const modal = document.getElementById('smsModal');
+            const backdrop = document.getElementById('smsBackdrop');
+            
+            if (modal) {
+              modal.style.display = 'none';
+              modal.classList.remove('visible');
+            }
+            
+            if (backdrop) {
+              backdrop.style.display = 'none';
+              backdrop.classList.remove('visible');
+            }
+            
+            return false;
+          };
+          
+          // Remove loading indicator
+          document.body.removeChild(loadingIndicator);
+        });
+      
+      // Recheck on window resize
+      window.addEventListener('resize', checkScreenSize);
+    });
+
+    // Function to add mock percentages to the initial static HTML table data
+    function populateInitialPercentages() {
+        const tableBody = document.getElementById('tableBody');
+        const rows = tableBody.querySelectorAll('tr');
+        rows.forEach(row => {
+            if (row.cells.length === 2) { // Only add if percentage cell doesn't exist
+                const percentage = generateMockPercentage();
+                let attendanceClass = 'attendance-high';
+                if (percentage < 50) attendanceClass = 'attendance-low';
+                else if (percentage <= 75) attendanceClass = 'attendance-medium';
+
+                const cellPercent = row.insertCell(); // Add the third cell
+                cellPercent.innerHTML = `<span class="attendance-percentage ${attendanceClass}">${percentage}%</span>`;
+            } else if (row.cells.length === 3 && !row.cells[2].querySelector('.attendance-percentage')) {
+                 // If cell exists but content needs update (e.g., from placeholder)
+                 const percentage = generateMockPercentage();
+                 let attendanceClass = 'attendance-high';
+                 if (percentage < 50) attendanceClass = 'attendance-low';
+                 else if (percentage <= 75) attendanceClass = 'attendance-medium';
+                 row.cells[2].innerHTML = `<span class="attendance-percentage ${attendanceClass}">${percentage}%</span>`;
+            }
+        });
+    }
+
+    // Function to update table and card list from data (Updated to include parent phone)
+    function updateStudentList(data) {
+        const tableBody = document.getElementById('tableBody');
+        const studentList = document.getElementById('studentList'); // Mobile card list
+        
+        // Clear existing content
+        tableBody.innerHTML = '';
+        studentList.innerHTML = ''; 
+        
+        if (!data || data.length === 0) {
+            console.warn('No data provided to updateStudentList');
+            const row = tableBody.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 3; // Span across THREE columns now
+            cell.textContent = 'No student data found.';
+            cell.style.textAlign = 'center';
+            updateStudentCountDisplay(); 
+            return;
+        }
+
+        // Populate table with data from Firebase
+        data.forEach(student => {
+            const row = tableBody.insertRow();
+            const cellRoll = row.insertCell();
+            const cellName = row.insertCell();
+            const cellPercent = row.insertCell(); // New cell for percentage
+            
+            cellRoll.textContent = student.rollNumber;
+            cellName.textContent = student.name;
+            
+            // Generate random attendance percentage
+            const percentage = student.percentage !== undefined ? student.percentage : generateMockPercentage();
+            let attendanceClass = 'attendance-high';
+            if (percentage < 50) attendanceClass = 'attendance-low';
+            else if (percentage <= 75) attendanceClass = 'attendance-medium';
+            
+            // Add span for styling and content
+            cellPercent.innerHTML = `<span class="attendance-percentage ${attendanceClass}">${percentage}%</span>`;
+
+            // Add parent phone to row dataset using Firebase data if available
+            const parentPhone = student.parentPhone || getParentPhoneFromRollNumber(student.rollNumber);
+            row.dataset.parentPhone = parentPhone;
+            row.dataset.studentName = student.name;
+            row.dataset.studentRoll = student.rollNumber;
+            if (student.parentName) row.dataset.parentName = student.parentName;
+            if (student.studentPhone) row.dataset.studentPhone = student.studentPhone;
+        });
+
+        // Regenerate mobile cards AFTER updating the table
+        generateStudentCards(); 
+        // Update count display AFTER table is populated
+        updateStudentCountDisplay(data.length); // Pass count directly
+        
+        console.log('Student list updated with Firebase data.');
+    }
+    
+    // Function to update the student count display
+    // Modified to accept an optional count argument
+    function updateStudentCountDisplay(count = -1) {
+        let displayCount = count;
+        if (displayCount === -1) {
+            // If no count provided, count visible rows (useful after initial load/sort)
+            const tableBody = document.getElementById('tableBody');
+            displayCount = tableBody ? Array.from(tableBody.children).filter(row => row.style.display !== 'none').length : 0;
+        }
+        
+        const countDisplay = document.getElementById('studentCountDisplay');
+        if (countDisplay) {
+            countDisplay.textContent = `Total: ${displayCount}`;
+        } else {
+            console.error("Student count display element not found.");
+        }
+    }
+
+    // --- Sorting Logic --- 
+    let currentSortColumn = -1; // -1: none, 0: Roll, 1: Name, 2: Attendance
+    let currentSortDirection = 'asc'; // 'asc' or 'desc'
+
+    function setupSorting() {
+        // Setup Table Headers
+        const tableHeaders = document.querySelectorAll('thead th');
+        tableHeaders.forEach((header, index) => {
+            // Add initial sort icon placeholder if not already present
+            if (!header.querySelector('.sort-icon')) {
+                header.innerHTML += '<span class="sort-icon"></span>'; 
+            }
+            // Clear existing listeners before adding new ones (optional, but good practice)
+            // header.removeEventListener('click', handleSortClick); // Requires named function
+            header.addEventListener('click', () => sortTable(index));
+        });
+
+        // Setup Card List Header (if it exists)
+        const cardHeaderContainer = document.getElementById('cardListHeader');
+        if (cardHeaderContainer) {
+            const cardHeaders = cardHeaderContainer.querySelectorAll('.sortable-header');
+            cardHeaders.forEach((header) => {
+                const index = parseInt(header.dataset.columnIndex, 10);
+                // Clear existing listeners (optional)
+                // header.removeEventListener('click', handleSortClick); // Requires named function
+                header.addEventListener('click', () => sortTable(index));
+            });
+        }
+    }
+
+    // Function to populate the mobile card header content
+    function populateCardHeader() {
+        const headerContainer = document.getElementById('cardListHeader');
+        if (!headerContainer) return;
+
+        // Check if attendance data should be displayed
+        const showAttendance = localStorage.getItem('showAttendanceData') === 'true';
+
+        // Clear previous content
+        headerContainer.innerHTML = ''; 
+
+        // Define header columns
+        const columns = [
+            { label: 'Roll Number', index: 0, class: 'card-header-roll' },
+            { label: 'Name', index: 1, class: 'card-header-name' }
+        ];
+        
+        // Only add attendance column if we should show it
+        if (showAttendance) {
+            columns.push({ label: 'Attend %', index: 2, class: 'card-header-attendance' });
+        }
+
+        columns.forEach(col => {
+            const headerEl = document.createElement('span');
+            headerEl.classList.add('sortable-header', col.class);
+            headerEl.dataset.columnIndex = col.index;
+            headerEl.innerHTML = `${col.label}<span class="sort-icon"></span>`;
+            headerContainer.appendChild(headerEl);
+        });
+        
+        // Re-attach sorting listeners after repopulating
+        setupSorting();
+        // Update icons based on current sort state
+        updateSortIcons(currentSortColumn);
+    }
+
+    function sortTable(columnIndex) {
+        console.log(`Sorting by column index: ${columnIndex}`);
+        
+        // Determine if we are in mobile (card) view or desktop (table) view
+        const isMobileView = window.innerWidth <= 767;
+        const listContainer = isMobileView ? document.getElementById('studentList') : document.getElementById('tableBody');
+        const rowSelector = isMobileView ? '.student-card' : 'tr';
+
+        if (!listContainer) return;
+
+        // Determine new sort direction
+        if (columnIndex === currentSortColumn) {
+            currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            currentSortColumn = columnIndex;
+            currentSortDirection = 'asc'; // Default to ascending for new column
+        }
+
+        // Get data from either table rows or student cards
+        const rows = Array.from(listContainer.querySelectorAll(rowSelector));
+        const data = rows.map(row => {
+            let rollNumber, name, percentageText, percentage;
+            let element = row; // Store reference to the row/card element
+
+            if (isMobileView) {
+                rollNumber = row.querySelector('.roll-number')?.textContent || '';
+                name = row.querySelector('.student-name')?.textContent || '';
+                percentageText = row.querySelector('.attendance-percentage')?.textContent || '0%';
+                // Use dataset if available (more reliable)
+                percentage = parseInt(row.dataset.percentage || percentageText.replace('%', ''), 10);
+            } else {
+                rollNumber = row.cells[0]?.textContent || '';
+                name = row.cells[1]?.textContent || '';
+                percentageText = row.cells[2]?.querySelector('.attendance-percentage')?.textContent || '0%';
+                percentage = parseInt(percentageText.replace('%', ''), 10);
+            }
+
+            return {
+                rollNumber: rollNumber,
+                name: name,
+                percentage: isNaN(percentage) ? 0 : percentage,
+                element: element
+            };
+        });
+
+        // Sort the data
+        data.sort((a, b) => {
+            let valA, valB;
+            if (columnIndex === 2) { // Sort by percentage (numeric)
+                valA = a.percentage;
+                valB = b.percentage;
+            } else { // Sort by roll number or name (string)
+                valA = columnIndex === 0 ? a.rollNumber : a.name;
+                valB = columnIndex === 0 ? b.rollNumber : b.name;
+            }
+            
+            let comparison = 0;
+            if (valA > valB) {
+                comparison = 1;
+            } else if (valA < valB) {
+                comparison = -1;
+            }
+            // For percentage, handle potential NaN values if needed (though parsed to 0 above)
+            
+            return currentSortDirection === 'desc' ? (comparison * -1) : comparison;
+        });
+        
+        // Update header icons (in both table and card headers)
+        updateSortIcons(columnIndex);
+        
+        // Reorder DOM elements (table rows or cards)
+        data.forEach(item => {
+            listContainer.appendChild(item.element);
+        });
+        
+        // Regenerate mobile cards *only* if sorting the table (to keep them in sync)
+        // if (!isMobileView) {
+        //    generateStudentCards(); 
+        // } 
+        // Commented out: Sorting cards directly, no need to regen from table
+        
+        // Update count display
+        updateStudentCountDisplay();
+    }
+
+    function updateSortIcons(sortedColumnIndex) {
+        // Update Table Headers
+        const tableHeaders = document.querySelectorAll('thead th');
+        tableHeaders.forEach((header, index) => {
+            const icon = header.querySelector('.sort-icon');
+            if (!icon) return; // Skip if icon doesn't exist
+            header.classList.remove('sorted');
+            icon.classList.remove('asc', 'desc');
+            
+            if (index === sortedColumnIndex) {
+                 header.classList.add('sorted');
+                 icon.classList.add(currentSortDirection);
+            }
+        });
+
+        // Update Card List Headers
+        const cardHeaders = document.querySelectorAll('#cardListHeader .sortable-header');
+        cardHeaders.forEach((header) => {
+            const icon = header.querySelector('.sort-icon');
+            if (!icon) return;
+            const index = parseInt(header.dataset.columnIndex, 10);
+            header.classList.remove('sorted');
+            icon.classList.remove('asc', 'desc');
+
+            if (index === sortedColumnIndex) {
+                header.classList.add('sorted');
+                icon.classList.add(currentSortDirection);
+            }
+        });
+    }
+    
+    // Update search to also regenerate cards after filtering table
+    document.getElementById('searchInput').addEventListener('input', function() {
+      const searchTerm = this.value.toLowerCase();
+      const tableRows = document.querySelectorAll('tbody tr');
+      
+      tableRows.forEach(row => {
+        const rollNumber = row.querySelector('td:first-child').textContent.toLowerCase();
+        const name = row.querySelector('td:last-child').textContent.toLowerCase();
+        
+        if (rollNumber.includes(searchTerm) || name.includes(searchTerm)) {
+          row.style.display = ''; // Show row
+        } else {
+          row.style.display = 'none'; // Hide row
+        }
+      });
+      
+      // Regenerate cards based on visible rows AFTER filtering
+      generateStudentCards(); 
+      // Update count based on visible rows after search
+      updateStudentCountDisplay(); 
+    });
+
+    // Selection mode variables
+    let isSelectionMode = false;
+    let selectedCardsData = []; // Store data instead of elements
+    let longPressTimer; // Keep variable, but don't use for timer logic
+    const LONG_PRESS_DURATION = 500; // milliseconds
+
+    // Setup card selection events
+    function setupCardSelectionEvents(card) {
+      let touchMoved = false; // Flag to detect if touch moved
+      let touchStartTime = 0; // Record start time
+
+      card.addEventListener('touchstart', (e) => {
+          touchMoved = false; // Reset moved flag on new touch
+          touchStartTime = Date.now(); // Record start time
+          // No timer needed here
+      }, { passive: true }); // Passive listener for performance
+
+      card.addEventListener('touchmove', () => {
+          touchMoved = true; // Set flag if touch moves during the press
+      }, { passive: true });
+
+      card.addEventListener('touchend', (e) => {
+          const touchEndTime = Date.now();
+          const touchDuration = touchEndTime - touchStartTime;
+
+          if (touchMoved) {
+              // If touch moved significantly, it's likely a scroll/drag, ignore for selection
+              touchMoved = false; // Reset for next interaction
+              return; 
+          }
+
+          // At this point, touch didn't move significantly
+
+          if (isSelectionMode) {
+              // If already in selection mode, this tap toggles the card's state
+              // A short tap (duration doesn't matter here, just that it ended without moving)
+              const checkbox = card.querySelector('.selection-checkbox');
+              if (checkbox) { // Ensure checkbox exists
+                  const currentlySelected = checkbox.classList.contains('checked');
+                  toggleCardSelection(card, !currentlySelected);
+                  e.preventDefault(); // Prevent the browser from firing a click event after this touch
+              }
+          } else {
+              // If not in selection mode, check if this was a long press
+              if (touchDuration >= LONG_PRESS_DURATION) {
+                  // This touch action WAS the long press that initiates the mode
+                  console.log('Long press detected on touchend, initiating selection mode.'); // Debug log
+                  isSelectionMode = true; // Set the mode flag
+                  toggleSelectionModeUI(true); // Update the UI for selection mode
+                  toggleCardSelection(card, true); // Select the card that was long-pressed
+              } else {
+                  // This was a short tap, not a long press, and not in selection mode
+                  // Handle regular tap action here if needed (e.g., view details in future)
+                  // console.log('Regular short tap on card (not in selection mode):', card.dataset.rollNumber);
+              }
+          }
+
+          // Reset flags/state if necessary (touchMoved already reset if applicable)
+          touchMoved = false;
+
+      });
+
+      // Fallback for non-touch devices (or clicks not captured by touchend)
+      card.addEventListener('click', (e) => {
+          // Prevent interfering if originated from touch (e.g., some browsers fire click after touchend)
+          // Check e.detail which is 0 for events not triggered by mouse click
+          if (e.detail === 0) { 
+              console.log("Click event ignored (likely from touch).");
+              return;
+          } 
+          
+          // Only handle actual clicks if in selection mode
+          if (isSelectionMode) {
+              console.log("Click event toggling selection."); // Debug log
+              const checkbox = card.querySelector('.selection-checkbox');
+              if (checkbox) {
+                   const currentlySelected = checkbox.classList.contains('checked');
+                   toggleCardSelection(card, !currentlySelected);
+              }
+          } else {
+               // Handle regular click action if needed (if not handled by short tap in touchend)
+               // console.log('Regular click on card (not in selection mode):', card.dataset.rollNumber);
+          }
+      });
+    }
+
+
+    // Toggle selection mode UI
+    function toggleSelectionModeUI(enabled) {
+      const studentList = document.getElementById('studentList');
+      const sendSmsBtn = document.getElementById('sendSmsBtn');
+      
+      if (enabled) {
+        studentList.classList.add('selection-mode'); // Use class on container for CSS
+        // Send SMS button visibility handled by updateSelectionCount
+      } else {
+        studentList.classList.remove('selection-mode');
+        if (sendSmsBtn) sendSmsBtn.classList.remove('visible'); // Ensure Send button is hidden when exiting mode
+        
+        // Deselect all cards UI and clear data
+        document.querySelectorAll('.student-card .selection-checkbox.checked').forEach(checkbox => {
+          checkbox.classList.remove('checked');
+        });
+        selectedCardsData = [];
+        isSelectionMode = false;
+      }
+      
+      updateSelectionCount(); // Update Send SMS visibility
+    }
+
+    // Toggle card selection (data and UI)
+    function toggleCardSelection(card, selected) {
+        const checkbox = card.querySelector('.selection-checkbox');
+        if (!checkbox) return; // Should not happen
+
+        const studentDataString = card.dataset.studentData;
+        if (!studentDataString) return; // Ensure data exists
+
+        try {
+            const studentData = JSON.parse(studentDataString);
+            const rollNumber = studentData.rollNumber;
+            const existingIndex = selectedCardsData.findIndex(data => data.rollNumber === rollNumber);
+
+            if (selected) {
+                checkbox.classList.add('checked');
+                if (existingIndex === -1) { // Add only if not already present
+                    selectedCardsData.push(studentData);
+                }
+            } else {
+                checkbox.classList.remove('checked');
+                if (existingIndex > -1) { // Remove if present
+                    selectedCardsData.splice(existingIndex, 1);
+                }
+            }
+        } catch (e) {
+            console.error("Error parsing student data from card:", e, studentDataString);
+            return; // Don't proceed if data is invalid
+        }
+        
+        updateSelectionCount();
+        
+        // Auto-exit selection mode if no cards are selected
+        if (selectedCardsData.length === 0 && isSelectionMode) {
+            toggleSelectionModeUI(false);
+        }
+    }
+
+    // Update selection count and Send SMS button visibility
+    function updateSelectionCount() {
+      const count = selectedCardsData.length;
+      const sendSmsBtn = document.getElementById('sendSmsBtn');
+      const studentCountDisplay = document.getElementById('studentCountDisplay');
+      const selectionCountDisplay = document.getElementById('selectionCountDisplay');
+      
+      // Control Send SMS button visibility based on count and mode
+      if (count > 0 && isSelectionMode) {
+          if (sendSmsBtn) sendSmsBtn.classList.add('visible');
+          
+          // Show selection count and hide total count
+          if (selectionCountDisplay) {
+              selectionCountDisplay.textContent = `Selected: ${count}`;
+              selectionCountDisplay.classList.add('visible');
+          }
+          if (studentCountDisplay) {
+              studentCountDisplay.style.display = 'none';
+          }
+      } else {
+          if (sendSmsBtn) sendSmsBtn.classList.remove('visible');
+          
+          // Hide selection count and show total count
+          if (selectionCountDisplay) {
+              selectionCountDisplay.classList.remove('visible');
+          }
+          if (studentCountDisplay) {
+              studentCountDisplay.style.display = '';
+          }
+      }
+    }
+
+    // Send SMS to selected students' parents - Now just opens the modal
+    function sendSmsToSelectedParents() {
+      if (selectedCardsData.length === 0) {
+        // Although button shouldn't be visible, add a check
+        console.warn('Send SMS button clicked with no selection.');
+        return;
+      }
+      
+      // Log selected student data for debugging
+      console.log('Preparing to send SMS to selected students:', selectedCardsData);
+      
+      // Count the selected students
+      const selectedCount = selectedCardsData.length;
+        
+      // Open the SMS modal showing the count of selected students
+      openSmsModalWithCards(selectedCount);
+    }
+
+    // Helper function to open the SMS modal
+    function openSmsModalWithCards(recipientCount) {
+      const smsModal = document.getElementById('smsModal');
+      const backdrop = document.getElementById('smsBackdrop');
+      const smsSendBtn = document.getElementById('smsSendBtn');
+      
+      if (!smsModal) {
+          console.error("SMS Modal element not found!");
+          alert("Error: Cannot open SMS dialog.");
+          return;
+      }
+
+      // Clear previous message and show modal
+      const messageTextArea = document.getElementById('smsMessage');
+      if (messageTextArea) messageTextArea.value = ''; 
+      
+      // Update the modal title to show how many recipients
+      const modalHeader = smsModal.querySelector('.sms-header');
+      if (modalHeader) {
+        let headerText = `Compose SMS to ${recipientCount} parent${recipientCount !== 1 ? 's' : ''}`;
+        modalHeader.textContent = headerText;
+        modalHeader.style.display = 'block'; // Make the header visible
+      }
+      
+      // Populate the recipient list in the modal with loading message
+      populateRecipientList();
+      
+      // Clear any inline display style 
+      if (backdrop) {
+        backdrop.classList.add('visible');
+        backdrop.style.display = 'block';
+      }
+      
+      smsModal.classList.add('visible');
+      smsModal.style.display = 'flex'; // Use flex since we're using flex layout
+      
+      // Make sure Send button is enabled with default styling
+      if (smsSendBtn) {
+        smsSendBtn.disabled = false;
+        smsSendBtn.style.backgroundColor = '';
+        smsSendBtn.style.cursor = '';
+        smsSendBtn.textContent = 'Send ';
+        
+        // Set up click handler to send SMS with the message when clicking Send Now
+        smsSendBtn.onclick = function() {
+          const message = document.getElementById('smsMessage').value;
+          if (!message.trim()) {
+            alert('Please enter a message before sending.');
+            return false;
+          }
+          
+          // Get the collected phone numbers
+          const phoneNumbers = window.collectedParentPhones || [];
+          if (phoneNumbers.length === 0) {
+            alert('No valid parent phone numbers found. Please try again.');
+            return false;
+          }
+          
+          // Send the SMS
+          sendSms(message, phoneNumbers);
+          return false;
+        };
+      }
+      
+      // Immediately start fetching parent phone numbers
+      fetchParentPhones();
+      
+      console.log(`SMS modal opened with ${recipientCount} recipients`);
+    }
+
+    // Function to populate the recipient list in the SMS modal
+    function populateRecipientList() {
+      const recipientList = document.getElementById('recipientList');
+      if (!recipientList) return;
+      
+      // Clear existing content
+      recipientList.innerHTML = '';
+      
+      if (selectedCardsData.length === 0) {
+        recipientList.innerHTML = '<div style="padding: 10px; text-align: center;">No recipients selected</div>';
+        return;
+      }
+      
+      // Show loading message until we get data
+      recipientList.innerHTML = '<div style="padding: 10px; text-align: center;"><div class="spinner" style="border: 3px solid rgba(0,0,0,0.1); width: 20px; height: 20px; border-radius: 50%; border-left-color: #2563eb; animation: spin 1s linear infinite; margin: 0 auto 10px;"></div>Loading recipient information...</div>';
+    }
+
+    // Function to fetch parent phone numbers directly from Firebase
+    function fetchParentPhones() {
+      // Skip if no selections
+      if (selectedCardsData.length === 0) {
+        return;
+      }
+      
+      const recipientList = document.getElementById('recipientList');
+      
+      // Get faculty name from localStorage
+      const facultyName = localStorage.getItem('currentFaculty');
+      if (!facultyName) {
+        console.error('No faculty name found in localStorage');
+        if (recipientList) {
+          recipientList.innerHTML = '<div style="padding: 10px; color: #ef4444;">Error: Faculty information not found.</div>';
+        }
+        return;
+      }
+
+      // Collect roll numbers from selected cards
+      const selectedRollNumbers = selectedCardsData.map(data => data.rollNumber);
+      console.log('Fetching data for selected roll numbers:', selectedRollNumbers);
+      
+      // Reference to the Firebase database
+      const database = firebase.database();
+      
+      // Create promises array to fetch each student's data directly
+      const fetchPromises = selectedRollNumbers.map(rollNumber => {
+        return database.ref(`faculty/${facultyName}/studentData/${rollNumber}`).once('value')
+          .then(snapshot => {
+            if (snapshot.exists()) {
+              return {
+                studentData: snapshot.val(),
+                rollNumber: rollNumber,
+                status: 'found'
+              };
+            } else {
+              return {
+                rollNumber: rollNumber,
+                status: 'not-found'
+              };
+            }
+          })
+          .catch(error => {
+            console.error(`Error fetching data for ${rollNumber}:`, error);
+            return {
+              rollNumber: rollNumber,
+              status: 'error',
+              error: error.message
+            };
+          });
+      });
+      
+      // Wait for all Firebase queries to complete
+      Promise.all(fetchPromises)
+        .then(results => {
+          // Process results
+          const foundStudents = results.filter(result => result.status === 'found' && result.studentData);
+          const notFoundStudents = results.filter(result => result.status !== 'found');
+          
+          console.log('Firebase fetch results:', results);
+          console.log('Found students:', foundStudents);
+          
+          // Separate students with/without phone numbers
+          const studentsWithPhones = [];
+          const studentsWithoutPhones = [];
+          
+          foundStudents.forEach(result => {
+            const student = result.studentData;
+            
+            // Find the matching card data for name display
+            const cardData = selectedCardsData.find(card => card.rollNumber === result.rollNumber);
+            
+            if (student.parentPhone && student.parentPhone.trim() !== '') {
+              studentsWithPhones.push({
+                rollNumber: student.rollNumber,
+                name: student.name || (cardData ? cardData.name : 'Unknown'),
+                phone: student.parentPhone,
+                parentName: student.parentName || ''
+              });
+            } else {
+              studentsWithoutPhones.push({
+                rollNumber: student.rollNumber,
+                name: student.name || (cardData ? cardData.name : 'Unknown')
+              });
+            }
+          });
+          
+          // Add not found students to the without phones list
+          notFoundStudents.forEach(result => {
+            const cardData = selectedCardsData.find(card => card.rollNumber === result.rollNumber);
+            if (cardData) {
+              studentsWithoutPhones.push({
+                rollNumber: result.rollNumber,
+                name: cardData.name,
+                status: result.status
+              });
+            }
+          });
+          
+          // Store the collected phone numbers for later use when sending
+          window.collectedParentPhones = studentsWithPhones.map(student => student.phone);
+          
+          // Update the recipient list
+          if (recipientList) {
+            // Clear the loading message
+            recipientList.innerHTML = '';
+            
+            // If we have at least one student with a phone
+            if (studentsWithPhones.length > 0) {
+              // First show students with phone numbers
+              studentsWithPhones.forEach(student => {
+        const item = document.createElement('div');
+        item.className = 'recipient-item';
+        
+                // Create display name
+                const displayName = student.parentName ? 
+                  `${student.parentName} (Parent of ${student.name})` : 
+                  `${student.name}`;
+                
+                item.innerHTML = `
+                  <div class="recipient-info"><i class="fas fa-check-circle" style="color: #10b981; margin-right: 5px;"></i>${displayName}</div>
+                  <div class="recipient-phone">${student.phone}</div>
+                `;
+                
+                recipientList.appendChild(item);
+              });
+            }
+            
+            // Then show students without phone numbers
+            if (studentsWithoutPhones.length > 0) {
+              studentsWithoutPhones.forEach(student => {
+                const item = document.createElement('div');
+                item.className = 'recipient-item';
+                item.style.color = '#ef4444';
+                
+                const errorMsg = student.status === 'error' ? 'Database error' : 
+                              student.status === 'not-found' ? 'Not found in database' :
+                              'No phone number in data';
+        
+        item.innerHTML = `
+                  <div class="recipient-info"><i class="fas fa-times-circle" style="margin-right: 5px;"></i>${student.name} (${student.rollNumber})</div>
+                  <div class="recipient-phone">${errorMsg}</div>
+        `;
+        
+        recipientList.appendChild(item);
+              });
+            }
+            
+            // Show message if no recipients found at all
+            if (recipientList.children.length === 0) {
+              recipientList.innerHTML = '<div style="padding: 10px; color: #ef4444;">No valid parent phone numbers found</div>';
+            }
+            
+            // Update send button state
+            const smsSendBtn = document.getElementById('smsSendBtn');
+            if (smsSendBtn) {
+              if (studentsWithPhones.length === 0) {
+                // No valid phone numbers
+                smsSendBtn.disabled = true;
+                smsSendBtn.style.backgroundColor = '#94a3b8';
+                smsSendBtn.style.cursor = 'not-allowed';
+                smsSendBtn.textContent = 'No valid numbers';
+              } else {
+                // We have valid numbers, enable the button
+                smsSendBtn.disabled = false;
+                smsSendBtn.style.backgroundColor = '';
+                smsSendBtn.style.cursor = '';
+                smsSendBtn.textContent = 'Send';
+              }
+            }
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching student data from Firebase:', error);
+          
+          // Show error in recipient list
+          if (recipientList) {
+            recipientList.innerHTML = `<div style="padding: 10px; color: #ef4444;">Error: ${error.message}</div>`;
+          }
+          
+          // Disable send button
+          const smsSendBtn = document.getElementById('smsSendBtn');
+          if (smsSendBtn) {
+            smsSendBtn.disabled = true;
+            smsSendBtn.style.backgroundColor = '#94a3b8';
+            smsSendBtn.style.cursor = 'not-allowed';
+          }
+      });
+    }
+
+    // Function to send SMS using the native SMS app
+    function sendSms(message, phoneNumbers) {
+      if (!message || !phoneNumbers || phoneNumbers.length === 0) {
+        console.error('Cannot send SMS: Missing message or phone numbers');
+        alert('Cannot send SMS: Missing message or phone numbers');
+        return;
+      }
+      
+      console.log(`Sending SMS to ${phoneNumbers.length} recipients`);
+      
+      // Get unique phone numbers (in case of duplicates)
+      const uniquePhones = [...new Set(phoneNumbers)];
+      
+      // Format phone numbers for SMS URI
+      const recipientString = uniquePhones.join(',');
+      
+      // Save SMS logs to Firebase before opening SMS app
+      saveSelectedStudentsSmsLogs(message);
+      
+      // Create SMS URI
+      let smsUri;
+      
+      // Detect device
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      if (isMobile) {
+        // Use SMS URI scheme for mobile devices
+        smsUri = `sms:${recipientString}?body=${encodeURIComponent(message)}`;
+      } else {
+        // Fallback for desktop - just show a prompt with instructions
+        alert(`To send this message to ${uniquePhones.length} parents, copy the message and use your messaging app:\n\n${message}\n\nRecipients: ${recipientString}`);
+        
+        // Copy message to clipboard
+        navigator.clipboard.writeText(message)
+          .then(() => {
+            console.log('Message copied to clipboard');
+            alert('Message copied to clipboard');
+          })
+          .catch(err => {
+            console.error('Could not copy message to clipboard:', err);
+          });
+          
+        return;
+      }
+      
+      // Close the modal before opening SMS app
+      const smsModal = document.getElementById('smsModal');
+      const backdrop = document.getElementById('smsBackdrop');
+      
+      if (smsModal) {
+        smsModal.style.display = 'none';
+        smsModal.classList.remove('visible');
+      }
+      
+      if (backdrop) {
+        backdrop.style.display = 'none';
+        backdrop.classList.remove('visible');
+      }
+      
+      // Open SMS app
+      window.location.href = smsUri;
+    }
+
+    // Function to save SMS logs to Firebase for selected students
+    function saveSelectedStudentsSmsLogs(message) {
+      // Get faculty name from localStorage
+      const facultyName = localStorage.getItem('currentFaculty');
+      if (!facultyName) {
+        console.error('Faculty name not found in localStorage');
+        return;
+      }
+      
+      // Create timestamps - same for all messages in this batch
+      const timestamp = new Date().toISOString();
+      
+      // Use collectedParentPhones which has the correct, freshly fetched phone numbers
+      const freshPhoneNumbers = window.collectedParentPhones || [];
+      
+      // Create a mapping of roll numbers to fresh phone numbers for easy lookup
+      const phoneNumberMap = {};
+      
+      // Map fresh phone numbers to students based on the order they were fetched
+      if (freshPhoneNumbers.length > 0) {
+        // Get the students with phones as they were processed in fetchParentPhones
+        const studentsWithPhones = selectedCardsData.filter(student => {
+          // This is the same logic used in fetchParentPhones to determine valid students
+          return student.rollNumber && student.parentPhone;
+        });
+        
+        // Create the mapping
+        studentsWithPhones.forEach((student, index) => {
+          if (index < freshPhoneNumbers.length) {
+            phoneNumberMap[student.rollNumber] = freshPhoneNumbers[index];
+          }
+        });
+      }
+      
+      console.log('Phone number mapping for logs:', phoneNumberMap);
+      
+      // Save one record for each selected student
+      selectedCardsData.forEach(student => {
+        // Get the fresh phone number if available, otherwise use the one from the card data
+        const parentPhone = phoneNumberMap[student.rollNumber] || student.parentPhone;
+        
+        // Log to Firebase only if we have the student roll number and parent phone
+        if (student.rollNumber && parentPhone) {
+          const log = {
+            studentRoll: student.rollNumber,
+            studentName: student.name,
+            parentName: student.parentName || 'Unknown',
+            recipient: parentPhone, // Use the fresh phone number here
+            sender: facultyName,
+            message: message,
+            timestamp: timestamp,
+            status: 'sent',
+            platform: 'SMS',
+            type: 'sms'
+          };
+      
+          // Use push to create unique ID for each communication
+          firebase.database().ref(`faculty/${facultyName}/communications/${student.rollNumber}`)
+            .push(log)
+            .then(() => {
+              console.log(`SMS log saved for student ${student.rollNumber} with phone ${parentPhone}`);
+            })
+            .catch(error => {
+              console.error(`Error saving SMS log for ${student.rollNumber}:`, error);
+            });
+        }
+      });
+    }
+
+    // Handle toggle for showing/hiding recipients list
+    function setupSmsModalEvents() {
+      const showRecipientsBtn = document.getElementById('showRecipientsBtn');
+      const recipientList = document.getElementById('recipientList');
+      
+      if (showRecipientsBtn && recipientList) {
+        showRecipientsBtn.addEventListener('click', function() {
+          const isExpanded = recipientList.style.display === 'block';
+          recipientList.style.display = isExpanded ? 'none' : 'block';
+          this.classList.toggle('expanded', !isExpanded);
+          this.innerHTML = isExpanded ? 
+            '<i class="fas fa-chevron-right"></i> Show recipients' : 
+            '<i class="fas fa-chevron-down"></i> Hide recipients';
+        });
+      }
+    }
+
+    // Helper function to generate random parent phone numbers for demo purposes
+    function getParentPhoneFromRollNumber(rollNumber) {
+      // Very basic example - DO NOT USE IN PRODUCTION
+      // Assume a mapping or lookup logic exists elsewhere
+      // For demo, just return a fixed prefix + last few digits
+      const suffix = rollNumber.slice(-4); // Get last 4 chars
+      return `987654${suffix}`; 
+    }
+
+    // Helper function to close the modal
+    function closeModal() {
+      const smsModal = document.getElementById('smsModal');
+      const backdrop = document.getElementById('smsBackdrop');
+      
+      console.log('Closing modal. Found modal:', !!smsModal, 'Found backdrop:', !!backdrop);
+      
+      if (smsModal) {
+        smsModal.classList.remove('visible');
+        // Force hide with inline style as a fallback
+        smsModal.style.display = 'none';
+      }
+      
+      if (backdrop) {
+        backdrop.classList.remove('visible');
+        // Force hide with inline style as a fallback
+        backdrop.style.display = 'none';
+      }
+      
+      console.log('Modal closed by cancel button');
+    }
+
+    // Setup additional modal closure methods
+    
+    // Close modal when clicking on backdrop
+    const backdrop = document.getElementById('smsBackdrop');
+    if (backdrop) {
+      backdrop.addEventListener('click', function(e) {
+        if (e.target === backdrop) {
+          closeModal();
+        }
+      });
+    }
+    
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        const smsModal = document.getElementById('smsModal');
+        if (smsModal && smsModal.classList.contains('visible')) {
+          closeModal();
+        }
+      }
+    });
+
+    // Handle upload button click to show attendance data
+    document.addEventListener('DOMContentLoaded', function() {
+      const uploadBtn = document.getElementById('uploadBtn');
+      if (uploadBtn) {
+        uploadBtn.addEventListener('click', function() {
+          // Set the flag to show attendance data
+          localStorage.setItem('showAttendanceData', 'true');
+        });
+      }
+    });
+
+    // Refresh view when returning to page to check if attendance data should be shown
+    let lastAttendanceState = localStorage.getItem('showAttendanceData') === 'true';
+    
+    window.addEventListener('focus', function() {
+      const currentAttendanceState = localStorage.getItem('showAttendanceData') === 'true';
+      
+      // If state changed while user was away, refresh the view
+      if (lastAttendanceState !== currentAttendanceState) {
+        console.log('Attendance display state changed, refreshing view');
+        lastAttendanceState = currentAttendanceState;
+        
+        // Toggle attendance column visibility in table
+        const attendanceHeader = document.getElementById('attendanceHeader');
+        if (attendanceHeader) {
+          attendanceHeader.style.display = currentAttendanceState ? '' : 'none';
+        }
+        
+        // Hide/show attendance percentages in table cells
+        const attendanceSpans = document.querySelectorAll('.attendance-percentage');
+        attendanceSpans.forEach(span => {
+          const cell = span.closest('td');
+          if (cell) {
+            cell.style.display = currentAttendanceState ? '' : 'none';
+          }
+        });
+        
+        // Regenerate cards to reflect attendance visibility change
+        generateStudentCards();
+        
+        // Update card header
+        populateCardHeader();
+      }
+    });
+    
+    // Add function to navigate to home page
+    function navigateToHome() {
+      window.location.href = 'webapp.html';
+    }
+
+    // Function to clear all SMS data with confirmation
+    function clearAllSmsData() {
+      const facultyName = localStorage.getItem('currentFaculty');
+      if (!facultyName) {
+        alert('Error: Faculty information not found.');
+        return;
+      }
+      
+      // Show confirmation with explicit warning about deleting from Firebase
+      if (confirm(`WARNING: This will permanently delete ALL SMS data from the Firebase Realtime Database for faculty ${facultyName}. This action cannot be undone. Are you sure you want to proceed?`)) {
+        // Show loading indicator in the modal
+        const smsSendBtn = document.getElementById('smsSendBtn');
+        const smsClearBtn = document.getElementById('smsClearBtn');
+        const smsCloseBtn = document.getElementById('smsCloseBtn');
+        
+        if (smsSendBtn) smsSendBtn.disabled = true;
+        if (smsClearBtn) {
+          smsClearBtn.disabled = true;
+          smsClearBtn.textContent = 'Deleting...';
+          smsClearBtn.style.backgroundColor = '#94a3b8';
+        }
+        if (smsCloseBtn) smsCloseBtn.disabled = true;
+        
+        // Delete all communications data for this faculty
+        firebase.database().ref(`faculty/${facultyName}/communications`).remove()
+          .then(() => {
+            console.log('Successfully deleted all SMS data from Firebase');
+            
+            // Re-enable buttons
+            if (smsSendBtn) smsSendBtn.disabled = false;
+            if (smsClearBtn) {
+              smsClearBtn.disabled = false;
+              smsClearBtn.textContent = 'Clear All Data';
+              smsClearBtn.style.backgroundColor = '#ef4444';
+            }
+            if (smsCloseBtn) smsCloseBtn.disabled = false;
+            
+            // Show success message
+            alert(`All SMS data has been successfully deleted from the Firebase Realtime Database for faculty ${facultyName}.`);
+            
+            // Close the modal
+            closeModal();
+          })
+          .catch(error => {
+            console.error('Error deleting SMS data:', error);
+            
+            // Re-enable buttons
+            if (smsSendBtn) smsSendBtn.disabled = false;
+            if (smsClearBtn) {
+              smsClearBtn.disabled = false;
+              smsClearBtn.textContent = 'Clear All Data';
+              smsClearBtn.style.backgroundColor = '#ef4444';
+            }
+            if (smsCloseBtn) smsCloseBtn.disabled = false;
+            
+            // Show error message
+            alert(`Error deleting SMS data from Firebase: ${error.message}. Please try again later.`);
+          });
+      }
+    }
   </script>
 
-</body>
+  <!-- Bottom Navigation -->
+    <div class="bottom-navbar">
+        <a href="javascript:void(0);" class="nav-item" onclick="navigateToHome()">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="messages.html" class="nav-item">
+            <i class="fas fa-comment-alt"></i>
+            <span>Messages</span>
+        </a>
+        <a href="upload.html" class="nav-item upload-btn" id="uploadBtn">
+            <div class="floating-upload-btn">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+        </a>
+        <a href="#" class="nav-item active" id="studentsBtn">
+            <i class="fas fa-user-graduate"></i>
+            <span>Students</span>
+        </a>
+        <a href="profile.html" class="nav-item" id="profileBtn">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
 
+</body>
 </html>
 
 

@@ -1,0 +1,20 @@
+
+faculty
+  └── [FACULTY_NAME]
+      ├── email: "example@email.com"
+      ├── password: "password123"
+      ├── section: "ECE-IIIYR-2nd SEM-SECTION-4"
+      └── studentData
+          ├── 22WJ1A04K3
+          │   ├── rollNumber: "22WJ1A04K3"
+          │   ├── name: "MOTHI ABHIRAM"
+          │   ├── parentPhone: "9701016317"
+          │   ├── parentName: ""
+          │   └── studentPhone: "9963813930"
+          ├── 22WJ1A04K4
+          │   ├── rollNumber: "22WJ1A04K4"
+          │   ├── name: "MOTTE PUJITHA"
+          │   ├── parentPhone: "9573527903"
+          │   ├── parentName: ""
+          │   └── studentPhone: "9347790933"
+          └── ... (more students)

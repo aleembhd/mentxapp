@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Profile - StudentConnect</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/favicon.ico">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Profile page specific styles */
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        .main-content-wrapper {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            padding-top: calc(7vh + 35px);
+            padding-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .profile-container {
+            max-width: 500px;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        .profile-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: #007BFF;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 15px;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .profile-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #333;
+            margin: 10px 0 5px;
+        }
+
+        .faculty-title {
+            color: #666;
+            font-size: 1.1rem;
+            margin: 0 0 20px;
+        }
+
+        .profile-card {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+
+        .info-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f0f7ff;
+            color: #007BFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex-grow: 1;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #777;
+            margin: 0 0 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: #333;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .logout-button {
+            width: 100%;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(244, 67, 54, 0.2);
+            margin-top: 20px;
+        }
+
+        .logout-button:hover {
+            background-color: #d32f2f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(244, 67, 54, 0.25);
+        }
+
+        /* Scrolling Ribbon Styles */
+        .scrolling-ribbon {
+            margin-top: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #253951;
+            color: white;
+            padding: 8px 0;
+            font-size: 0.9em;
+            text-align: center;
+            overflow: hidden;
+            white-space: nowrap;
+            z-index: 1000;
+        }
+
+        .scrolling-ribbon p {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll-left 15s linear infinite;
+            margin: 0;
+        }
+
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        .brand-logo {
+            max-width: 150px;
+            height: auto;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 15px;
+        }
+
+        /* Bottom Navigation */
+        .bottom-navbar {
+            background-color: #fff;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #555;
+            text-decoration: none;
+            font-size: 0.8em;
+            transition: color 0.3s;
+        }
+
+        .nav-item i {
+            font-size: 1.4em;
+            margin-bottom: 4px;
+        }
+
+        .nav-item.active {
+            color: #007BFF;
+        }
+
+        .nav-item.active i {
+            color: #007BFF;
+        }
+
+        .modern-profile-display {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            position: relative;
+        }
+        
+        .initial-badge {
+            background-color: #253951;
+            color: white;
+            width: 60px;
+            height: 60px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-right: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .profile-details {
+            flex: 1;
+        }
+        
+        .profile-section {
+            font-size: 0.7rem;
+            color: #666;
+            margin-top: 4px;
+        }
+        
+        /* Override existing styles to match the new design */
+        .profile-name {
+            font-size: 0.9rem !important;
+            margin: 0 !important;
+            font-weight: 700 !important;
+            color: #333 !important;
+        }
+        
+        /* Edit styling */
+        .edit-icon {
+            color: #007BFF;
+            padding: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .edit-icon:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .edit-fields {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+        
+        .edit-field-row {
+            margin-bottom: 10px;
+        }
+        
+        .edit-field-row label {
+            display: block;
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .edit-input {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .save-edit-btn {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            font-weight: 500;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        
+        .save-edit-btn:hover {
+            background-color: #0069d9;
+        }
+        
+        .info-item {
+            position: relative;
+            padding-right: 40px;
+        }
+        
+        .info-item .edit-icon {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        /* Add Student Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(5px);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 25px;
+            border: 1px solid #888;
+            width: 90%;
+            max-width: 500px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .close-modal {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 15px;
+        }
+        
+        .close-modal:hover,
+        .close-modal:focus {
+            color: black;
+            text-decoration: none;
+        }
+        
+        .modal h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.5rem;
+        }
+        
+        .modal-description {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .modal .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            font-family: monospace;
+        }
+        
+        .modal textarea.input-field {
+            resize: vertical;
+            min-height: 150px;
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 10px 16px;
+            border-radius: 6px;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        
+        .cancel-btn {
+            background-color: #f1f1f1;
+            color: #333;
+        }
+        
+        .add-btn {
+            background-color: #007BFF;
+            color: white;
+        }
+        
+        .add-btn:hover {
+            background-color: #0069d9;
+            transform: translateY(-2px);
+        }
+        
+        .cancel-btn:hover {
+            background-color: #e1e1e1;
+        }
+        
+        /* Added style for notification */
+        .notification {
+            position: fixed;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            display: none;
+            text-align: center;
+            max-width: 300px;
+            width: 90%;
+        }
+        
+        /* Animation for the initial badge on long press */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .initial-badge.pulse {
+            animation: pulse 1s ease-in-out;
+        }
+        
+        .add-cr-btn {
+            background-color: #4CAF50;
+            margin-top: 10px;
+            width: 100%;
+        }
+        
+        /* CR Card Styles */
+        .cr-card {
+            margin-bottom: 15px;
+            padding: 15px;
+        }
+        
+        .cr-info h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.2rem;
+        }
+        
+        .cr-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        
+        .cr-actions button {
+            flex: 1;
+            margin: 0 5px;
+            padding: 8px 0;
+            border-radius: 5px;
+            border: none;
+            background-color: #007BFF;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .cr-actions button:first-child {
+            margin-left: 0;
+        }
+        
+        .cr-actions button:last-child {
+            margin-right: 0;
+            background-color: #25D366;
+        }
+        
+        .cr-actions button:hover {
+            opacity: 0.9;
+        }
+        
+        .no-crs-message, .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .error-message {
+            color: #e74c3c;
+        }
+        
+        .cr-loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Scrolling Ribbon -->
+    <div class="scrolling-ribbon">
+        <p>🎉App is under development. More features coming soon! Stay tuned...🎉</p>
+    </div>
+
+    <div class="main-content-wrapper">
+        <img src="images/brandlogo.png" alt="MentX Brand Logo" class="brand-logo">
+        
+        <div class="profile-container">
+            <div class="profile-card" style="margin-top: 20px;">
+                <div class="modern-profile-display">
+                    <div class="initial-badge" id="initialBadge">
+                        <span>S</span>
+                    </div>
+                    <div class="profile-details">
+                        <div class="profile-name" id="facultyName">Loading...</div>
+                        <div class="profile-section" id="sectionDisplay">Loading...</div>
+                    </div>
+                    <div class="edit-icon" onclick="toggleProfileHeaderEdit()">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                </div>
+                <!-- Editable fields for profile header -->
+                <div class="edit-fields" id="headerEditFields" style="display: none;">
+                    <div class="edit-field-row">
+                        <label>Name:</label>
+                        <input type="text" id="editFacultyName" class="edit-input">
+                    </div>
+                    <div class="edit-field-row">
+                        <label>Section:</label>
+                        <input type="text" id="editSectionName" class="edit-input">
+                    </div>
+                    <button class="save-edit-btn" onclick="saveProfileHeaderChanges()">Save</button>
+                </div>
+            </div>
+            
+            <div class="profile-card">
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="info-content">
+                        <p class="info-label">Email</p>
+                        <p class="info-value" id="facultyEmail">Loading...</p>
+                    </div>
+                    <div class="edit-icon" onclick="toggleFieldEdit('email')">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                </div>
+                <div class="edit-fields" id="emailEditField" style="display: none;">
+                    <div class="edit-field-row">
+                        <label>Email:</label>
+                        <input type="email" id="editFacultyEmail" class="edit-input">
+                    </div>
+                    <button class="save-edit-btn" onclick="saveFieldChange('email')">Save</button>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="info-content">
+                        <p class="info-label">Section</p>
+                        <p class="info-value" id="sectionName">Loading...</p>
+                    </div>
+                    <div class="edit-icon" onclick="toggleFieldEdit('section')">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                </div>
+                <div class="edit-fields" id="sectionEditField" style="display: none;">
+                    <div class="edit-field-row">
+                        <label>Section:</label>
+                        <input type="text" id="editSection" class="edit-input">
+                    </div>
+                    <button class="save-edit-btn" onclick="saveFieldChange('section')">Save</button>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <div class="info-content">
+                        <p class="info-label">Role</p>
+                        <p class="info-value">Faculty</p>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="logout-button" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </button>
+        </div>
+    </div>
+    
+    <!-- Add Student Modal -->
+    <div id="addStudentModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Add New Students</h2>
+            <p class="modal-description">Enter student data as an array of objects with rollNumber, name, parentPhone, etc.</p>
+            <div class="form-group">
+                <textarea id="studentDataInput" class="input-field" rows="10" 
+                    placeholder='Valid JSON format (required):
+[
+  {
+    "rollNumber": "22WJ1A04K3", 
+    "name": "STUDENT NAME", 
+    "parentPhone": "9701016317",
+    "parentName": "",
+    "studentPhone": "9963813930"
+  }
+]
+
+JavaScript format (auto-converted):
+[
+  { rollNumber: "22WJ1A04K3", name: "STUDENT NAME", parentPhone: "9701016317" },
+  { rollNumber: "22WJ1A04K4", name: "ANOTHER NAME", parentPhone: "9876543211" }
+]
+
+Notes:
+- Copy-paste directly from script.js
+- System will fix trailing commas like [{ key: "value" },]
+- Each student needs rollNumber and name
+- parentPhone needed for SMS features'></textarea>
+            </div>
+            <div class="form-actions">
+                <button class="btn cancel-btn" onclick="closeAddStudentModal()">Cancel</button>
+                <button class="btn add-btn" onclick="addNewStudents()">Add Students</button>
+                <button class="btn add-cr-btn" style="background-color: #4CAF50; color: white;" onclick="openAddCRModal()">Add CRs</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add CR Modal -->
+    <div id="addCRModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeAddCRModal()">&times;</span>
+            <h2>Add Class Representative</h2>
+            <p class="modal-description">Enter the roll number of a student to add them as a CR</p>
+            <div class="form-group">
+                <input type="text" id="crRollNumberInput" class="input-field" placeholder="Enter Roll Number (e.g., 22WJ1A04Q4)">
+            </div>
+            <div class="form-actions">
+                <button class="btn cancel-btn" onclick="closeAddCRModal()">Cancel</button>
+                <button class="btn add-btn" onclick="addNewCR()">Add CR</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bottom Navigation -->
+    <div class="bottom-navbar">
+        <a href="webapp.html" class="nav-item">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </a>
+        <a href="messages.html" class="nav-item">
+            <i class="fas fa-comment-alt"></i>
+            <span>Messages</span>
+        </a>
+        <a href="students.html" class="nav-item">
+            <i class="fas fa-user-graduate"></i>
+            <span>Students</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <i class="fas fa-user"></i>
+            <span>Profile</span>
+        </a>
+    </div>
+    
+    <!-- Success notification element -->
+    <div id="notificationPopup" class="notification" style="display: none;"></div>
+    
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="script.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Firebase configuration
+            const firebaseConfig = {
+                apiKey: "AIzaSyCs1Wgew-Y1hcY8xIUm9uFagdeByDTDGU0",
+                authDomain: "collegeapp-59309.firebaseapp.com",
+                projectId: "collegeapp-59309",
+                storageBucket: "collegeapp-59309.firebasestorage.app",
+                messagingSenderId: "298826677970",
+                appId: "1:298826677970:web:3989fed84dd5bb4d73f70b",
+                databaseURL: "https://collegeapp-59309-default-rtdb.firebaseio.com/"
+            };
+
+            // Initialize Firebase if not already initialized
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+
+            // Get faculty name from localStorage
+            const facultyName = localStorage.getItem('currentFaculty');
+            if (facultyName) {
+                document.getElementById('facultyName').textContent = facultyName;
+                
+                // Get faculty data from Firebase
+                const database = firebase.database();
+                database.ref('faculty/' + facultyName).once('value')
+                    .then(snapshot => {
+                        if (snapshot.exists()) {
+                            const facultyData = snapshot.val();
+                            
+                            // Set email
+                            if (facultyData.email) {
+                                document.getElementById('facultyEmail').textContent = facultyData.email;
+                                document.getElementById('editFacultyEmail').value = facultyData.email;
+                            } else {
+                                document.getElementById('facultyEmail').textContent = 'Not available';
+                                document.getElementById('editFacultyEmail').value = '';
+                            }
+                            
+                            // Set section in both places
+                            if (facultyData.section) {
+                                document.getElementById('sectionName').textContent = facultyData.section;
+                                document.getElementById('sectionDisplay').textContent = facultyData.section;
+                                document.getElementById('editSection').value = facultyData.section;
+                                document.getElementById('editSectionName').value = facultyData.section;
+                                
+                                // Update the initial badge with first letter of faculty name
+                                const initial = facultyName.charAt(0).toUpperCase();
+                                document.querySelector('.initial-badge span').textContent = initial;
+                            } else {
+                                document.getElementById('sectionName').textContent = 'Not assigned';
+                                document.getElementById('sectionDisplay').textContent = 'Not assigned';
+                                document.getElementById('editSection').value = '';
+                                document.getElementById('editSectionName').value = '';
+                            }
+
+                            // Set edit field values
+                            document.getElementById('editFacultyName').value = facultyName;
+                        } else {
+                            document.getElementById('facultyEmail').textContent = 'Not available';
+                            document.getElementById('sectionName').textContent = 'Not assigned';
+                            document.getElementById('sectionDisplay').textContent = 'Not assigned';
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error fetching faculty data:", error);
+                        document.getElementById('facultyEmail').textContent = 'Not available';
+                        document.getElementById('sectionName').textContent = 'Not assigned';
+                        document.getElementById('sectionDisplay').textContent = 'Not assigned';
+                    });
+            } else {
+                document.getElementById('facultyName').textContent = 'Not logged in';
+                document.getElementById('facultyEmail').textContent = 'Not available';
+                document.getElementById('sectionName').textContent = 'Not assigned';
+                document.getElementById('sectionDisplay').textContent = 'Not assigned';
+            }
+            
+            // Override navigation event listeners on profile page
+            const navItems = document.querySelectorAll('.bottom-navbar .nav-item');
+            navItems.forEach(item => {
+                // Remove any existing event listeners by cloning and replacing
+                const newItem = item.cloneNode(true);
+                item.parentNode.replaceChild(newItem, item);
+                
+                // Home button should directly navigate to webapp.html
+                if (newItem.querySelector('i.fas.fa-home')) {
+                    newItem.addEventListener('click', function(e) {
+                        window.location.href = 'webapp.html';
+                    });
+                }
+            });
+
+            // Setup long press detection for initial badge
+            setupLongPressOnInitialBadge();
+            
+            // Close modal when clicking on the X or outside the modal
+            setupModalCloseHandlers();
+        });
+
+        // Toggle profile header edit fields
+        function toggleProfileHeaderEdit() {
+            const editFields = document.getElementById('headerEditFields');
+            if (editFields.style.display === 'none') {
+                editFields.style.display = 'block';
+            } else {
+                editFields.style.display = 'none';
+            }
+        }
+
+        // Toggle individual field edit
+        function toggleFieldEdit(fieldType) {
+            const editField = document.getElementById(fieldType + 'EditField');
+            if (editField.style.display === 'none') {
+                editField.style.display = 'block';
+            } else {
+                editField.style.display = 'none';
+            }
+        }
+
+        // Save profile header changes
+        function saveProfileHeaderChanges() {
+            const newName = document.getElementById('editFacultyName').value.trim();
+            const newSection = document.getElementById('editSectionName').value.trim();
+            
+            if (!newName) {
+                alert("Faculty name cannot be empty");
+                return;
+            }
+            
+            // Get the current faculty name
+            const currentFacultyName = localStorage.getItem('currentFaculty');
+            
+            // Show loading or disable button
+            const saveBtn = document.querySelector('.save-edit-btn');
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            
+            const database = firebase.database();
+            
+            // If the faculty name is changed, we need to move all data
+            if (newName !== currentFacultyName) {
+                // First get all data from the current faculty
+                database.ref('faculty/' + currentFacultyName).once('value')
+                    .then(snapshot => {
+                        if (snapshot.exists()) {
+                            const facultyData = snapshot.val();
+                            
+                            // Update the section in the data
+                            facultyData.section = newSection;
+                            
+                            // Create the new faculty entry
+                            return database.ref('faculty/' + newName).set(facultyData)
+                                .then(() => {
+                                    // Remove the old faculty entry
+                                    return database.ref('faculty/' + currentFacultyName).remove();
+                                })
+                                .then(() => {
+                                    // Update localStorage with new name
+                                    localStorage.setItem('currentFaculty', newName);
+                                    
+                                    // Update UI
+                                    document.getElementById('facultyName').textContent = newName;
+                                    document.getElementById('sectionName').textContent = newSection;
+                                    document.getElementById('sectionDisplay').textContent = newSection;
+                                    
+                                    // Update initial
+                                    const initial = newName.charAt(0).toUpperCase();
+                                    document.querySelector('.initial-badge span').textContent = initial;
+                                    
+                                    alert("Profile updated successfully!");
+                                    
+                                    // Hide edit fields
+                                    document.getElementById('headerEditFields').style.display = 'none';
+                                    
+                                    // Reset save button
+                                    saveBtn.disabled = false;
+                                    saveBtn.textContent = 'Save';
+                                });
+                        } else {
+                            throw new Error("Current faculty data not found");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error updating profile:", error);
+                        alert("Error updating profile: " + error.message);
+                        saveBtn.disabled = false;
+                        saveBtn.textContent = 'Save';
+                    });
+            } else {
+                // Only section is being updated
+                database.ref('faculty/' + currentFacultyName).update({
+                    section: newSection
+                })
+                .then(() => {
+                    // Update UI
+                    document.getElementById('sectionName').textContent = newSection;
+                    document.getElementById('sectionDisplay').textContent = newSection;
+                    document.getElementById('editSection').value = newSection;
+                    
+                    alert("Section updated successfully!");
+                    
+                    // Hide edit fields
+                    document.getElementById('headerEditFields').style.display = 'none';
+                    
+                    // Reset save button
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save';
+                })
+                .catch(error => {
+                    console.error("Error updating section:", error);
+                    alert("Error updating section: " + error.message);
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save';
+                });
+            }
+        }
+
+        // Save individual field change
+        function saveFieldChange(fieldType) {
+            const currentFacultyName = localStorage.getItem('currentFaculty');
+            if (!currentFacultyName) {
+                alert("You must be logged in to make changes");
+                return;
+            }
+            
+            let newValue = '';
+            let fieldPath = '';
+            
+            if (fieldType === 'email') {
+                newValue = document.getElementById('editFacultyEmail').value.trim();
+                if (!newValue || !validateEmail(newValue)) {
+                    alert("Please enter a valid email address");
+                    return;
+                }
+                fieldPath = 'email';
+            } else if (fieldType === 'section') {
+                newValue = document.getElementById('editSection').value.trim();
+                if (!newValue) {
+                    alert("Section cannot be empty");
+                    return;
+                }
+                fieldPath = 'section';
+            }
+            
+            // Show loading or disable button
+            const saveBtn = document.querySelector(`#${fieldType}EditField .save-edit-btn`);
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Saving...';
+            
+            const database = firebase.database();
+            const updateData = {};
+            updateData[fieldPath] = newValue;
+            
+            database.ref('faculty/' + currentFacultyName).update(updateData)
+                .then(() => {
+                    // Update UI
+                    if (fieldType === 'email') {
+                        document.getElementById('facultyEmail').textContent = newValue;
+                    } else if (fieldType === 'section') {
+                        document.getElementById('sectionName').textContent = newValue;
+                        document.getElementById('sectionDisplay').textContent = newValue;
+                        document.getElementById('editSectionName').value = newValue;
+                    }
+                    
+                    alert(`${fieldType.charAt(0).toUpperCase() + fieldType.slice(1)} updated successfully!`);
+                    
+                    // Hide edit field
+                    document.getElementById(`${fieldType}EditField`).style.display = 'none';
+                    
+                    // Reset save button
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save';
+                })
+                .catch(error => {
+                    console.error(`Error updating ${fieldType}:`, error);
+                    alert(`Error updating ${fieldType}: ${error.message}`);
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = 'Save';
+                });
+        }
+
+        // Validate email
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // Long press detection for initial badge
+        function setupLongPressOnInitialBadge() {
+            const initialBadge = document.getElementById('initialBadge');
+            if (!initialBadge) return;
+            
+            let pressTimer;
+            let isLongPress = false;
+            
+            initialBadge.addEventListener('touchstart', function(e) {
+                isLongPress = false;
+                pressTimer = setTimeout(function() {
+                    isLongPress = true;
+                    // Visual feedback
+                    initialBadge.classList.add('pulse');
+                    // Show modal
+                    openAddStudentModal();
+                }, 800); // 800ms for long press
+            });
+            
+            initialBadge.addEventListener('touchend', function(e) {
+                clearTimeout(pressTimer);
+                setTimeout(function() {
+                    initialBadge.classList.remove('pulse');
+                }, 300);
+                
+                if (isLongPress) {
+                    e.preventDefault(); // Prevent regular tap action
+                }
+            });
+            
+            // For desktop/mouse support
+            initialBadge.addEventListener('mousedown', function(e) {
+                isLongPress = false;
+                pressTimer = setTimeout(function() {
+                    isLongPress = true;
+                    // Visual feedback
+                    initialBadge.classList.add('pulse');
+                    // Show modal
+                    openAddStudentModal();
+                }, 800); // 800ms for long press
+            });
+            
+            initialBadge.addEventListener('mouseup', function(e) {
+                clearTimeout(pressTimer);
+                setTimeout(function() {
+                    initialBadge.classList.remove('pulse');
+                }, 300);
+                
+                if (isLongPress) {
+                    e.preventDefault(); // Prevent regular click action
+                }
+            });
+            
+            // Handle mouse leaving during press
+            initialBadge.addEventListener('mouseleave', function(e) {
+                clearTimeout(pressTimer);
+                initialBadge.classList.remove('pulse');
+            });
+        }
+        
+        // Setup modal close handlers
+        function setupModalCloseHandlers() {
+            const modal = document.getElementById('addStudentModal');
+            const closeBtn = document.querySelector('.close-modal');
+            
+            if (closeBtn) {
+                closeBtn.addEventListener('click', closeAddStudentModal);
+            }
+            
+            // Close when clicking outside of modal content
+            window.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeAddStudentModal();
+                }
+            });
+            
+            // Close on Escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && modal.style.display === 'block') {
+                    closeAddStudentModal();
+                }
+            });
+        }
+        
+        // Open add student modal
+        function openAddStudentModal() {
+            const modal = document.getElementById('addStudentModal');
+            modal.style.display = 'block';
+            document.getElementById('studentDataInput').focus();
+        }
+        
+        // Close add student modal
+        function closeAddStudentModal() {
+            const modal = document.getElementById('addStudentModal');
+            modal.style.display = 'none';
+        }
+        
+        // Add new students to Firebase
+        function addNewStudents() {
+            const facultyName = localStorage.getItem('currentFaculty');
+            const studentDataRaw = document.getElementById('studentDataInput').value.trim();
+            
+            if (!facultyName) {
+                showNotification('Error: Faculty name not found. Please log in again.');
+                return;
+            }
+            
+            if (!studentDataRaw) {
+                showNotification('Please enter student data.');
+                return;
+            }
+            
+            // Parse student data, handling both JSON and JS object notation
+            let studentDataArray;
+            try {
+                // First try to preprocess the input to handle JavaScript object notation
+                // This converts unquoted property names to quoted ones
+                let processedInput = studentDataRaw;
+                
+                // Handle specific case where there's a trailing comma at the end of the array
+                if (processedInput.match(/},\s*\]$/)) {
+                    console.log("Detected trailing comma at end of array, fixing...");
+                    processedInput = processedInput.replace(/},\s*\]$/, "}]");
+                }
+                
+                // Only preprocess if it looks like JS object notation (unquoted property names)
+                if (processedInput.match(/\{\s*[a-zA-Z0-9_$]+\s*:/)) {
+                    processedInput = processedInput
+                        // Add quotes to property names that don't have them
+                        .replace(/(\{|\,)\s*([a-zA-Z0-9_$]+)\s*:/g, '$1"$2":')
+                        // Make sure string values are in double quotes (convert single quotes)
+                        .replace(/'([^']*)'/g, '"$1"');
+                }
+                
+                // Fix trailing commas in arrays and objects (common in JS but invalid in JSON)
+                processedInput = processedInput
+                    // Remove trailing commas in objects: { x: 1, y: 2, } -> { x: 1, y: 2 }
+                    .replace(/,\s*}/g, '}')
+                    // Remove trailing commas in arrays: [ 1, 2, ] -> [ 1, 2 ]
+                    .replace(/,\s*\]/g, ']');
+                
+                console.log("Processed input:", processedInput);
+                
+                // Now try to parse as JSON
+                try {
+                    studentDataArray = JSON.parse(processedInput);
+                } catch (parseError) {
+                    // If parsing fails, try one more fallback approach - eval with protection
+                    console.log("JSON parsing failed, attempting eval fallback...");
+                    try {
+                        // Eval is normally dangerous but in this controlled context with validation after, it's acceptable
+                        // to handle JavaScript notation that's difficult to convert with regex
+                        const evalResult = eval("(" + processedInput + ")");
+                        if (Array.isArray(evalResult)) {
+                            studentDataArray = evalResult;
+                            console.log("Eval fallback succeeded");
+                        } else {
+                            throw new Error("Eval result is not an array");
+                        }
+                    } catch (evalError) {
+                        // If eval also fails, throw the original parse error
+                        throw parseError;
+                    }
+                }
+                
+                if (!Array.isArray(studentDataArray)) {
+                    throw new Error('Input must be a JSON array');
+                }
+            } catch (e) {
+                console.error('JSON parsing error:', e);
+                showNotification('Invalid format. Error: ' + e.message + '. Please check for trailing commas and ensure all property names have quotes.');
+                return;
+            }
+            
+            if (studentDataArray.length === 0) {
+                showNotification('The array is empty. Please add at least one student.');
+                return;
+            }
+            
+            // Validate student data - each must have a roll number and name
+            for (let i = 0; i < studentDataArray.length; i++) {
+                const student = studentDataArray[i];
+                if (!student) {
+                    showNotification(`Invalid student object at position ${i+1}. Each item must be an object.`);
+                    return;
+                }
+                if (!student.rollNumber) {
+                    showNotification(`Student at position ${i+1} is missing the required "rollNumber" field.`);
+                    return;
+                }
+                if (!student.name) {
+                    showNotification(`Student at position ${i+1} is missing the required "name" field.`);
+                    return;
+                }
+                if (student.rollNumber && typeof student.rollNumber !== 'string') {
+                    showNotification(`Student at position ${i+1} has an invalid "rollNumber". It must be a string.`);
+                    return;
+                }
+                if (student.name && typeof student.name !== 'string') {
+                    showNotification(`Student at position ${i+1} has an invalid "name". It must be a string.`);
+                    return;
+                }
+            }
+            
+            // Show a temporary "Processing..." notification
+            showNotification('Processing...', false);
+            
+            // Reference to Firebase database
+            const database = firebase.database();
+            
+            // Update each student directly under the studentData/{rollNumber} path
+            const updates = {};
+            studentDataArray.forEach(student => {
+                // Ensure student data follows the expected structure
+                updates[`faculty/${facultyName}/studentData/${student.rollNumber}`] = {
+                    rollNumber: student.rollNumber,
+                    name: student.name,
+                    parentPhone: student.parentPhone || "",
+                    parentName: student.parentName || "",
+                    studentPhone: student.studentPhone || ""
+                };
+            });
+            
+            // Use update to modify multiple paths atomically
+            database.ref().update(updates)
+                .then(() => {
+                    // Close modal immediately
+                    closeAddStudentModal();
+                    
+                    // Clear the input field
+                    document.getElementById('studentDataInput').value = '';
+                    
+                    // Show success notification for 2 seconds
+                    const successMsg = studentDataArray.length === 1 
+                        ? `Successfully added 1 student (${studentDataArray[0].name}).` 
+                        : `Successfully added ${studentDataArray.length} students.`;
+                    showNotification(successMsg, true, 2000);
+                })
+                .catch(error => {
+                    console.error('Error adding students:', error);
+                    showNotification('Error saving to database. Please check your connection and try again.');
+                });
+        }
+        
+        // Open add CR modal
+        function openAddCRModal() {
+            // Close the student modal first
+            closeAddStudentModal();
+            
+            // Then open the CR modal
+            const modal = document.getElementById('addCRModal');
+            modal.style.display = 'block';
+            document.getElementById('crRollNumberInput').focus();
+        }
+        
+        // Close add CR modal
+        function closeAddCRModal() {
+            const modal = document.getElementById('addCRModal');
+            modal.style.display = 'none';
+        }
+        
+        // Add new CR function
+        function addNewCR() {
+            const rollNumber = document.getElementById('crRollNumberInput').value.trim().toUpperCase();
+            
+            if (!rollNumber) {
+                showNotification('Please enter a roll number');
+                return;
+            }
+            
+            const facultyName = localStorage.getItem('currentFaculty');
+            if (!facultyName) {
+                showNotification('Error: Faculty name not found. Please log in again.');
+                return;
+            }
+            
+            // Get reference to the database
+            const database = firebase.database();
+            
+            // First, check if the student with this roll number exists
+            database.ref(`faculty/${facultyName}/studentData/${rollNumber}`).once('value')
+                .then(snapshot => {
+                    if (!snapshot.exists()) {
+                        // Student doesn't exist in faculty's student data
+                        // Try to find in the default student list
+                        return database.ref('students').orderByChild('rollNumber').equalTo(rollNumber).once('value')
+                            .then(defaultSnapshot => {
+                                if (!defaultSnapshot.exists()) {
+                                    throw new Error("Student with this roll number does not exist");
+                                }
+                                // Student exists in default list
+                                return defaultSnapshot.val();
+                            });
+                    }
+                    // Student exists in faculty's data
+                    return { [rollNumber]: snapshot.val() };
+                })
+                .then(studentData => {
+                    // Get the student data from the first result
+                    const student = studentData[Object.keys(studentData)[0]];
+                    
+                    // Now, get the current CRs from Firebase
+                    return database.ref(`faculty/${facultyName}/classRepresentatives`).once('value')
+                        .then(snapshot => {
+                            let crs = [];
+                            if (snapshot.exists()) {
+                                crs = snapshot.val();
+                            }
+                            
+                            // Check if this roll number is already in the CRs list
+                            if (Array.isArray(crs) && crs.some(cr => cr.rollNumber === rollNumber)) {
+                                throw new Error("This student is already a CR");
+                            }
+                            
+                            // Add the new CR to the list
+                            const newCR = {
+                                rollNumber: rollNumber,
+                                name: student.name,
+                                studentPhone: student.studentPhone || ""
+                            };
+                            
+                            if (!Array.isArray(crs)) {
+                                crs = [];
+                            }
+                            
+                            crs.push(newCR);
+                            
+                            // Update the CRs list in Firebase
+                            return database.ref(`faculty/${facultyName}/classRepresentatives`).set(crs);
+                        });
+                })
+                .then(() => {
+                    // Success! Close the modal and show notification
+                    closeAddCRModal();
+                    showNotification('CR added successfully!', true, 2000);
+                    
+                    // Clear the input field
+                    document.getElementById('crRollNumberInput').value = '';
+                })
+                .catch(error => {
+                    console.error('Error adding CR:', error);
+                    showNotification(`Error: ${error.message}`);
+                });
+        }
+        
+        // Show notification
+        function showNotification(message, autoHide = true, duration = 3000) {
+            // Use the fixed notification element
+            let notification = document.getElementById('notificationPopup');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'notificationPopup';
+                notification.className = 'notification';
+                document.body.appendChild(notification);
+            }
+            
+            // Set message and show
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            // Set success style if the message indicates success
+            if (message.toLowerCase().includes('success')) {
+                notification.style.backgroundColor = '#4CAF50'; // Green
+            } else if (message.toLowerCase().includes('error') || message.toLowerCase().includes('invalid')) {
+                notification.style.backgroundColor = '#f44336'; // Red
+            } else if (message.toLowerCase().includes('processing')) {
+                notification.style.backgroundColor = '#2196F3'; // Blue
+            }
+            
+            // Auto-hide after specified duration if autoHide is true
+            if (autoHide) {
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, duration);
+            }
+            
+            return notification; // Return for later reference
+        }
+    </script>
+</body>
+</html> 

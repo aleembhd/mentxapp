@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Student Data</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css"> <!-- Assuming shared style.css -->
+  <style>
+    :root {
+      --primary-color: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg-color: #f8fafc;
+      --card-bg: #ffffff;
+      --border-color: #e2e8f0;
+      --text-color: #1e293b;
+      --text-light: #64748b;
+      --success-color: #10b981;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      line-height: 1.5;
+      padding-top: 70px; /* Space for fixed header */
+      padding-bottom: 20px;
+    }
+
+    .upload-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: var(--card-bg);
+      padding: 0 16px; /* Adjusted padding */
+      display: flex;
+      align-items: center;
+      z-index: 10;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      height: 60px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .upload-header .back-button {
+      background: transparent;
+      color: var(--text-color); /* Changed color */
+      border: none;
+      font-size: 20px; /* Adjusted size */
+      cursor: pointer;
+      padding: 10px; /* Added padding for easier click */
+      margin-right: 8px; /* Adjusted margin */
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color 0.2s;
+    }
+    
+    .upload-header .back-button:hover {
+        background-color: rgba(0,0,0,0.05);
+    }
+
+    .upload-header h1 {
+      font-size: 18px; /* Adjusted size */
+      font-weight: 500; /* Adjusted weight */
+      margin: 0;
+      color: var(--text-color); /* Ensure consistent text color */
+      flex-grow: 1; /* Allow title to take space */
+      text-align: left; /* Align title left */
+      padding-left: 8px; /* Add some space from button */
+    }
+
+    .upload-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .upload-area {
+      border: 3px dashed var(--border-color);
+      border-radius: 8px;
+      padding: 40px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.3s, background-color 0.3s;
+      margin-bottom: 20px;
+    }
+
+    .upload-area.dragover {
+      border-color: var(--primary-color);
+      background-color: #eff6ff;
+    }
+
+    .upload-area i {
+      font-size: 48px;
+      color: var(--primary-color);
+      margin-bottom: 16px;
+    }
+
+    .upload-area p {
+      margin: 8px 0;
+      color: var(--text-light);
+    }
+
+    .upload-area .browse-link {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    #fileInput {
+      display: none;
+    }
+
+    .file-info {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f8f8f8;
+      border-radius: 6px;
+      border: 1px solid var(--border-color);
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .file-info p {
+      margin: 0;
+      font-size: 14px;
+    }
+    .file-info span {
+       font-weight: 500;
+       margin-right: 5px;
+    }
+
+    .file-info button {
+      background: transparent;
+      border: none;
+      color: var(--error-color);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .instructions {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .instructions h2 {
+      font-size: 18px;
+      margin-bottom: 15px;
+    }
+
+    .instructions ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .instructions li {
+      margin-bottom: 12px;
+      padding-left: 25px;
+      position: relative;
+    }
+
+    .instructions li i {
+      position: absolute;
+      left: 0;
+      top: 4px;
+      color: var(--success-color);
+    }
+    
+    .instructions .warning i {
+       color: var(--warning-color);
+    }
+
+    .instructions strong {
+        font-weight: 600;
+    }
+
+    .status-message {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 6px;
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    .status-message.success {
+      background-color: #d1fae5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .status-message.error {
+      background-color: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .status-message.loading {
+      background-color: #e0f2fe;
+      color: #0c4a6e;
+      border: 1px solid #bae6fd;
+    }
+
+  </style>
+  <!-- PDF.js library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.min.js"></script>
+  <script>
+    // Set workerSrc for pdf.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.11.338/pdf.worker.min.js';
+  </script>
+  <!-- SheetJS library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
+</head>
+<body>
+
+  <header class="upload-header">
+    <button class="back-button" onclick="window.location.href='webapp.html'"><i class="fas fa-arrow-left"></i></button>
+    <h1>Upload Student Data</h1>
+  </header>
+
+  <div class="upload-container">
+    <div class="upload-area" id="uploadArea">
+      <i class="fas fa-cloud-upload-alt"></i>
+      <p><strong>Drag & Drop</strong> your PDF or Excel file here</p>
+      <p>or</p>
+      <p><label for="fileInput" class="browse-link">Browse Files</label></p>
+      <input type="file" id="fileInput" accept=".pdf,.xlsx,.xls,.csv">
+      <p class="supported-formats" style="font-size: 12px; color: var(--text-light); margin-top: 15px;">Supported formats: PDF, XLSX, XLS, CSV</p>
+    </div>
+
+    <div class="file-info" id="fileInfo">
+      <p><span id="fileName"></span> (<span id="fileSize"></span>)</p>
+      <button id="removeFileBtn"><i class="fas fa-times-circle"></i></button>
+    </div>
+    
+    <div class="status-message" id="statusMessage"></div>
+
+    <!-- Data Preview Section -->
+    <div id="previewArea" style="display: none; margin-top: 20px; padding: 15px; background-color: #f0f9ff; border: 1px solid #bee3f8; border-radius: 6px;">
+      <h3>Data Preview (First 5 Records)</h3>
+      <div id="previewContent" style="margin-top: 10px; font-size: 14px; max-height: 150px; overflow-y: auto;">
+        <!-- Preview data will be inserted here -->
+      </div>
+      <div class="confirmation-buttons" style="margin-top: 15px; display: flex; gap: 10px;">
+        <button id="confirmBtn" class="confirm-button" style="background-color: var(--success-color); color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Confirm & Update Students</button>
+        <button id="cancelBtn" class="cancel-button" style="background-color: var(--error-color); color: white; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+      </div>
+    </div>
+    <!-- End Data Preview Section -->
+
+    <div class="instructions">
+      <h2>How to Upload:</h2>
+      <ul>
+        <li><i class="fas fa-check-circle"></i> Drag your file onto the area above or click 'Browse Files'.</li>
+        <li><i class="fas fa-check-circle"></i> Ensure your file contains <strong>Roll Numbers</strong> and <strong>Student Names</strong>.</li>
+        <li><i class="fas fa-check-circle"></i> The system will attempt to automatically extract this information.</li>
+        <li class="warning"><i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> For PDFs, the text must be <strong>selectable</strong> (not an image scan). You should be able to copy/paste text from the PDF.</li>
+        <li><i class="fas fa-check-circle"></i> For Excel/CSV, ensure Roll Numbers and Names are in clear columns.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const fileNameDisplay = document.getElementById('fileName');
+    const fileSizeDisplay = document.getElementById('fileSize');
+    const removeFileBtn = document.getElementById('removeFileBtn');
+    const statusMessage = document.getElementById('statusMessage');
+
+    // Prevent default drag behaviors
+    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, preventDefaults, false);
+      document.body.addEventListener(eventName, preventDefaults, false);
+    });
+
+    // Highlight drop area when item is dragged over it
+    ['dragenter', 'dragover'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, highlight, false);
+    });
+
+    ['dragleave', 'drop'].forEach(eventName => {
+      uploadArea.addEventListener(eventName, unhighlight, false);
+    });
+
+    // Handle dropped files
+    uploadArea.addEventListener('drop', handleDrop, false);
+
+    // Handle file selection via browse button
+    fileInput.addEventListener('change', handleFileSelect, false);
+    
+    // Handle remove file button click
+    removeFileBtn.addEventListener('click', removeFile, false);
+
+    function preventDefaults(e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
+    function highlight() {
+      uploadArea.classList.add('dragover');
+    }
+
+    function unhighlight() {
+      uploadArea.classList.remove('dragover');
+    }
+
+    function handleDrop(e) {
+      const dt = e.dataTransfer;
+      const files = dt.files;
+      handleFiles(files);
+    }
+
+    function handleFileSelect(e) {
+      const files = e.target.files;
+      handleFiles(files);
+    }
+
+    function handleFiles(files) {
+      if (files.length > 0) {
+        const file = files[0];
+        // Basic validation (you can add more specific type checks here)
+        if (file.type.match('application/pdf') || 
+            file.name.match(/\.(xlsx|xls|csv)$/i)) {
+              
+          displayFileInfo(file);
+          processFile(file);
+        } else {
+          showStatus('Invalid file type. Please upload PDF, XLSX, XLS, or CSV.', 'error');
+          resetUploadState();
+        }
+      }
+    }
+
+    function displayFileInfo(file) {
+        fileNameDisplay.textContent = file.name;
+        fileSizeDisplay.textContent = formatFileSize(file.size);
+        fileInfo.style.display = 'flex';
+        statusMessage.style.display = 'none'; // Hide previous status
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+    
+    function removeFile() {
+        fileInput.value = ''; // Clear the file input
+        resetUploadState();
+    }
+    
+    function resetUploadState() {
+        fileInfo.style.display = 'none';
+        fileNameDisplay.textContent = '';
+        fileSizeDisplay.textContent = '';
+        statusMessage.style.display = 'none';
+        hidePreview(); // Hide preview on reset
+        sessionStorage.removeItem('tempExtractedData'); // Clear temp data
+    }
+
+    function processFile(file) {
+      showStatus('Processing file...', 'loading');
+      hidePreview(); // Hide previous preview if any
+      const reader = new FileReader();
+
+      reader.onload = async (event) => {
+        try {
+          const fileData = event.target.result;
+          let extractedData = [];
+
+          // Clear previous data from localStorage before processing new file
+          localStorage.removeItem('uploadedStudentData'); 
+
+          if (file.type === 'application/pdf') {
+            extractedData = await extractDataFromPDF(fileData);
+          } else if (file.name.match(/\.(xlsx|xls|csv)$/i)) {
+            extractedData = extractDataFromExcel(fileData);
+          } else {
+            throw new Error('Unsupported file type');
+          }
+
+          if (extractedData.length > 0) {
+            // Store data temporarily before confirmation
+            sessionStorage.setItem('tempExtractedData', JSON.stringify(extractedData)); 
+            showStatus(`Successfully extracted ${extractedData.length} potential student records. Please confirm below.`, 'success');
+            displayPreview(extractedData);
+            console.log('Extracted Data (Preview):', extractedData.slice(0, 5));
+          } else {
+            showStatus('Could not find student data (Roll Number and Name) in the file. Please check the file content and format.', 'warning');
+            hidePreview();
+          }
+        } catch (error) {
+          console.error('Error processing file:', error);
+          showStatus(`Error processing file: ${error.message}. Ensure the file is not corrupted and the format is correct.`, 'error');
+          hidePreview();
+        }
+      };
+
+      reader.onerror = () => {
+        showStatus('Error reading file.', 'error');
+      };
+
+      // Read the file based on type
+      if (file.type === 'application/pdf') {
+        reader.readAsArrayBuffer(file);
+      } else if (file.name.match(/\.(xlsx|xls|csv)$/i)) {
+        reader.readAsArrayBuffer(file);
+      } else {
+         // Fallback or handle specific text types if needed
+         reader.readAsText(file);
+      }
+    }
+
+    async function extractDataFromPDF(fileData) {
+        console.log("Starting PDF extraction...");
+        const pdf = await pdfjsLib.getDocument({ data: fileData }).promise;
+        const numPages = pdf.numPages;
+        let studentData = [];
+        // Regex: Strict pattern XXWJXXXXXX (X=Alphanumeric), case-insensitive
+        const rollNumberRegex = /\b([A-Z0-9]{2}WJ[A-Z0-9]{6})\b/i;
+        // Regex: Looks for names (at least 2 words, mostly letters/spaces, potentially mixed case)
+        const nameRegex = /\b([A-Za-z][A-Za-z\s.]{2,}\s[A-Za-z][A-Za-z\s.]+)\b/;
+
+        for (let i = 1; i <= numPages; i++) {
+            console.log(`Processing PDF Page ${i}/${numPages}`);
+            const page = await pdf.getPage(i);
+            const textContent = await page.getTextContent();
+            
+            // Process text items with basic proximity logic
+            let potentialPairs = [];
+            let lineItems = [];
+            let lastY = -1;
+
+            textContent.items.forEach(item => {
+                // Simple line grouping based on Y coordinate
+                if (lastY !== -1 && Math.abs(item.transform[5] - lastY) > 5) { // New line heuristic
+                    potentialPairs.push(lineItems.join(' '));
+                    lineItems = [];
+                }
+                lineItems.push(item.str);
+                lastY = item.transform[5];
+            });
+            potentialPairs.push(lineItems.join(' ')); // Add last line
+
+            potentialPairs.forEach(lineText => {
+                lineText = lineText.trim();
+                if (!lineText) return; // Skip empty lines
+                
+                console.log("PDF Line Text:", lineText);
+                const rollMatch = lineText.match(rollNumberRegex);
+                
+                if (rollMatch) {
+                    const roll = rollMatch[0].toUpperCase();
+                    // Remove roll number and try to find name in the rest of the line
+                    let remainingText = lineText.replace(rollMatch[0], '').trim();
+                    const nameMatch = remainingText.match(nameRegex);
+                    
+                    if (nameMatch) {
+                        const name = nameMatch[0].trim().toUpperCase(); // Standardize
+                        console.log(`  Found Pair: Roll=${roll}, Name=${name}`);
+                        studentData.push({ rollNumber: roll, name: name });
+                    } else {
+                        console.log(`  Found Roll=${roll}, but no clear name on same line.`);
+                        // Could add logic here to look at next line if needed, but keep it simpler for now
+                    }
+                }
+            });
+        }
+
+        // Deduplication based on roll number
+        const uniqueData = Array.from(new Map(studentData.map(item => [item.rollNumber.toUpperCase(), item])).values());
+        console.log(`Finished PDF extraction. Found ${uniqueData.length} unique records.`);
+        return uniqueData;
+    }
+
+    function extractDataFromExcel(fileData) {
+        console.log("Starting Excel/CSV extraction...");
+        const workbook = XLSX.read(fileData, { type: 'array' });
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false }); // Skip blank rows
+        let studentData = [];
+        // Regex: Strict pattern XXWJXXXXXX (X=Alphanumeric), case-insensitive
+        const rollNumberRegex = /\b([A-Z0-9]{2}WJ[A-Z0-9]{6})\b/i;
+        // Regex: Reasonably flexible name pattern (letters, spaces, dots, at least 3 chars)
+        const nameRegex = /^[A-Za-z\s.]{3,}$/;
+
+        if (jsonData.length < 1) {
+             console.warn("Excel sheet appears empty.");
+             return [];
+        }
+
+        // --- Column Identification --- 
+        let rollNumberCol = -1;
+        let nameCol = -1;
+        const headerRowIndex = jsonData.findIndex(row => row && row.some(cell => cell && String(cell).toLowerCase().includes('roll') || String(cell).toLowerCase().includes('name')));
+        const startRow = headerRowIndex !== -1 ? headerRowIndex + 1 : 0; // Start after header if found
+        const headerRow = headerRowIndex !== -1 ? jsonData[headerRowIndex].map(h => String(h || '').toLowerCase().trim()) : [];
+
+        console.log("Header Row Index:", headerRowIndex, "Header Row Content:", headerRow);
+
+        if (headerRowIndex !== -1) {
+            // Try common header names
+            rollNumberCol = headerRow.findIndex(h => h.includes('roll') || h.includes('ht no') || h.includes('htno'));
+            nameCol = headerRow.findIndex(h => h.includes('name') || h.includes('student'));
+        }
+
+        // If headers still not found, try guessing based on content of first few data rows
+        if (rollNumberCol === -1 || nameCol === -1) {
+            console.log("Headers not conclusive, attempting content-based guessing...");
+            const maxGuessRows = Math.min(startRow + 10, jsonData.length); // Check up to 10 data rows
+            let potentialRollCols = {};
+            let potentialNameCols = {};
+
+            for (let c = 0; c < (jsonData[startRow] ? jsonData[startRow].length : 0); c++) {
+                potentialRollCols[c] = 0;
+                potentialNameCols[c] = 0;
+                let checkedRows = 0;
+                for (let r = startRow; r < maxGuessRows; r++) {
+                    if (jsonData[r] && jsonData[r][c]) {
+                        const cellValue = String(jsonData[r][c]).trim();
+                        if (rollNumberRegex.test(cellValue)) {
+                            potentialRollCols[c]++;
+                        }
+                        if (nameRegex.test(cellValue)) {
+                            potentialNameCols[c]++;
+                        }
+                        checkedRows++;
+                    }
+                }
+                 // Normalize scores by number of non-empty cells checked
+                 potentialRollCols[c] = checkedRows > 0 ? potentialRollCols[c] / checkedRows : 0;
+                 potentialNameCols[c] = checkedRows > 0 ? potentialNameCols[c] / checkedRows : 0;
+            }
+            
+            console.log("Column Guess Scores (Roll):". potentialRollCols);
+            console.log("Column Guess Scores (Name):". potentialNameCols);
+
+            // Find best scoring columns (simple max score approach)
+            let bestRollScore = 0.5; // Require > 50% match
+            let bestNameScore = 0.5;
+
+            for (const col in potentialRollCols) {
+                if (potentialRollCols[col] > bestRollScore) {
+                    bestRollScore = potentialRollCols[col];
+                    rollNumberCol = parseInt(col);
+                }
+            }
+            for (const col in potentialNameCols) {
+                // Ensure name col is different from roll col and has a good score
+                if (parseInt(col) !== rollNumberCol && potentialNameCols[col] > bestNameScore) {
+                    bestNameScore = potentialNameCols[col];
+                    nameCol = parseInt(col);
+                }
+            }
+        }
+        
+        if (rollNumberCol === -1 || nameCol === -1) {
+            console.warn('Could not reliably identify Roll Number and Name columns after guessing.');
+            // Fallback: Assume first two columns if possible
+            if ((jsonData[startRow] ? jsonData[startRow].length : 0) >= 2) {
+                rollNumberCol = 0;
+                nameCol = 1;
+                console.warn('Falling back: Assuming first column is Roll Number and second is Name.');
+            } else {
+                 console.error("Cannot determine columns.");
+                 return []; // Cannot proceed
+            }
+        }
+        
+        console.log(`Final Identified Columns -> Roll Number: ${rollNumberCol}, Name: ${nameCol}`);
+
+        // --- Data Extraction --- 
+        for (let i = startRow; i < jsonData.length; i++) {
+            const row = jsonData[i];
+            if (row && row.length > Math.max(rollNumberCol, nameCol)) {
+                const rollNumberRaw = row[rollNumberCol];
+                const nameRaw = row[nameCol];
+
+                if (rollNumberRaw && nameRaw) {
+                    const rollNumberStr = String(rollNumberRaw).trim().toUpperCase();
+                    const nameStr = String(nameRaw).trim().replace(/\s+/g, ' ').toUpperCase(); // Standardize spacing and case
+                    
+                    // Validate roll number format and ensure name looks reasonable
+                    if (rollNumberRegex.test(rollNumberStr) && nameStr.length > 2) {
+                        console.log(`  Extracted Row ${i}: Roll=${rollNumberStr}, Name=${nameStr}`);
+                        studentData.push({ rollNumber: rollNumberStr, name: nameStr });
+                    } else {
+                         console.log(`  Skipped Row ${i}: Invalid format? Roll='${rollNumberRaw}', Name='${nameRaw}'`);
+                    }
+                }
+            }
+        }
+        
+        // Deduplication
+        const uniqueData = Array.from(new Map(studentData.map(item => [item.rollNumber, item])).values());
+        console.log(`Finished Excel/CSV extraction. Found ${uniqueData.length} unique records.`);
+        return uniqueData;
+    }
+
+    function showStatus(message, type) {
+        statusMessage.textContent = message;
+        statusMessage.className = `status-message ${type}`; // Reset classes and add new type
+        statusMessage.style.display = 'block';
+    }
+
+    function displayPreview(data) {
+        const previewArea = document.getElementById('previewArea');
+        const previewContent = document.getElementById('previewContent');
+        previewContent.innerHTML = ''; // Clear previous preview
+
+        const dataToShow = data.slice(0, 5);
+        if(dataToShow.length === 0) {
+            previewContent.innerHTML = '<p>No data to preview.</p>';
+        } else {
+            const list = document.createElement('ul');
+            list.style.listStyle = 'none';
+            list.style.paddingLeft = '0';
+            dataToShow.forEach(item => {
+                const listItem = document.createElement('li');
+                listItem.style.marginBottom = '5px';
+                listItem.innerHTML = `<strong>Roll:</strong> ${item.rollNumber} | <strong>Name:</strong> ${item.name}`;
+                list.appendChild(listItem);
+            });
+            previewContent.appendChild(list);
+        }
+        
+        previewArea.style.display = 'block';
+        setupConfirmationButtons();
+    }
+
+    function hidePreview() {
+        const previewArea = document.getElementById('previewArea');
+        previewArea.style.display = 'none';
+        document.getElementById('previewContent').innerHTML = '';
+    }
+    
+    function setupConfirmationButtons() {
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        
+        // Remove previous listeners to avoid duplication if processing multiple files
+        confirmBtn.replaceWith(confirmBtn.cloneNode(true));
+        cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+        
+        // Re-fetch buttons after cloning
+        const newConfirmBtn = document.getElementById('confirmBtn');
+        const newCancelBtn = document.getElementById('cancelBtn');
+
+        newConfirmBtn.addEventListener('click', () => {
+            const tempData = sessionStorage.getItem('tempExtractedData');
+            if (tempData) {
+                localStorage.setItem('uploadedStudentData', tempData); // Move to localStorage for students.html
+                // Set flag to show attendance data since PDF was uploaded
+                localStorage.setItem('showAttendanceData', 'true');
+                
+                sessionStorage.removeItem('tempExtractedData');
+                showStatus('Data confirmed. Navigating to Students page...', 'loading');
+                // Add a small delay to show the message before navigating
+                setTimeout(() => {
+                    window.location.href = 'students.html?updated=true';
+                }, 500); 
+            } else {
+                showStatus('Error: No data found to confirm.', 'error');
+            }
+        });
+
+        newCancelBtn.addEventListener('click', () => {
+            showStatus('Upload cancelled.', 'warning');
+            resetUploadState(); // Clears temp data and hides preview
+        });
+    }
+
+  </script>
+</body>
+</html>
