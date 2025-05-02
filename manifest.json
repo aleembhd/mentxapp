@@ -1,6 +1,6 @@
 {
-  "name": "StudentConnect",
-  "short_name": "StudentConnect",
+  "name": "mentX",
+  "short_name": "mentX",
   "description": "Enhanced Messaging System for Educational Institutions",
   "start_url": "./",
   "scope": ".",
