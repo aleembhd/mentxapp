@@ -969,7 +969,8 @@ font-size: 15px;
   position: fixed;
   bottom: 0;
   left: 0;
-  width: 100%;
+  right: 0;
+  z-index: 1000 !important; /* Higher z-index to ensure it's always on top */
   background-color: white;
   display: flex;
   justify-content: space-around;
@@ -1007,6 +1008,9 @@ font-size: 15px;
   padding: 15px;
   margin-top: 15px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px !important; /* Ensure enough space for the bottom navbar */
+  position: relative;
+  z-index: 1; /* Lower than the bottom navbar */
 }
 
 /* Preserve existing styles for action buttons */
@@ -1332,4 +1336,9 @@ textarea {
   background-color: #27ae60;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Ensure the container has enough padding at the bottom */
+.container, .main-content-wrapper {
+  padding-bottom: 70px !important; /* Ensure padding is sufficient for the navbar */
 }

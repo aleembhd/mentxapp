@@ -148,160 +148,6 @@
             }
         }
 
-    </style>
-</head>
-
-<body>
-    <!-- Scrolling Ribbon -->
-    <div class="scrolling-ribbon">
-        <p>🎉App is under development. More features coming soon! Stay tuned...🎉</p>
-    </div>
-
-    <!-- Header -->
-    <!-- <div class="app-header">
-        <div class="header-content">
-            <div class="logo-container">
-                <div class="gn-logo">GN</div>
-                <div class="header-text">GURU NANAK INSTITUTIONS</div>
-            </div>
-            <div class="programs">
-                Engineering • Dental • MBA • MCA • Pharmacy • PGDM
-            </div>
-        </div>
-    </div> -->
-    
-    <div class="main-content-wrapper">
-        <!-- <h1 class="brand-logo">MentX</h1> -->
-        <img src="images/brandlogo.png" alt="MentX Brand Logo" class="brand-logo">
-        
-        <!-- Section Title -->
-        <div class="section-banner">
-            <span>(ECE)IIIYR - 2nd SEM - SECTION-4</span>
-        </div>
-        
-        <div class="container">
-            <!-- Search Container -->
-            <div class="search-wrapper">
-                <input type="text" id="rollNumber" placeholder="Enter Roll Number">
-                <button id="searchBtn" class="search-button">
-                    <i class="fas fa-search"></i> Search
-                </button>
-            </div>
-            
-            <button class="crs-button" onclick="toggleCRProfiles()">
-                <i class="fas fa-phone"></i> Contact CRS
-            </button>
-            
-            <!-- Student Profile Card -->
-            <div id="profileCard" class="profile-card" style="display:none;">
-                <h2 id="studentName"></h2>
-                <p><strong>Roll Number:</strong> <span id="studentRoll"></span></p>
-                <p><strong>Email:</strong> <span id="studentEmail"></span></p>
-                
-                <!-- Editable Parent Name -->
-                <p>
-                    <strong>Parent Name:</strong> 
-                    <span id="displayParentName"></span>
-                    <input type="text" id="editParentName" style="display:none;" class="inline-edit-input">
-                </p>
-                
-                <!-- Editable Parent Phone -->
-                <p>
-                    <strong>Parent Phone:</strong> 
-                    <span id="displayParentPhone"></span>
-                    <input type="tel" id="editParentPhone" style="display:none;" class="inline-edit-input">
-                </p>
-                
-                <!-- Editable Student Phone -->
-                <p>
-                    <strong>Student Phone:</strong> 
-                    <span id="displayStudentPhone"></span>
-                    <input type="tel" id="editStudentPhone" style="display:none;" class="inline-edit-input">
-                </p>
-                
-                <!-- Edit/Save Button -->
-                <button id="saveProfileBtn" onclick="saveProfileChanges()" class="edit-save-button" style="display:none;">Save Changes</button>
-
-                <div class="action-buttons">
-                    <div class="button-row firstflex">
-                        <button onclick="callParent()">Call Parent</button>
-                        <button onclick="callStudent()">Call Student</button>
-                    </div>
-                    <div class="button-row secondflex">
-                        <button id="whatsappParentBtn">WhatsApp Parent</button>
-                        <button onclick="whatsappStudent()">WhatsApp Student</button>
-                    </div>
-                </div>
-                
-                <button id="editProfileBtn" onclick="toggleProfileEdit()" class="edit-save-button full-width-button">Edit Details</button>
-                
-                <div id="customMessageArea" style="display:none;">
-                    <textarea id="customMessageContent" placeholder="Enter your custom message"></textarea>
-                    <button id="sendCustomMessageBtn">Send WhatsApp Message</button>
-                </div>
-            </div>
-            
-            <!-- Message Form -->
-            <div id="messageForm" class="message-form" style="display:none;">
-                <h2>Send Message</h2>
-                <textarea id="messageContent" placeholder="Enter your message"></textarea>
-                <div class="action-buttons">
-                    <button onclick="saveMessage()">Save</button>
-                    <button onclick="sendMessage()">Send</button>
-                </div>
-            </div>
-            
-            <!-- CR Profiles -->
-            <div id="crProfiles" style="display:none;"></div>
-            
-            <!-- Bulk Message Form -->
-            <div id="bulkMessageForm" class="message-form" style="display:none;">
-                <h2>Bulk Message</h2>
-                <textarea id="bulkMessageContent" placeholder="Enter your message for all parents"></textarea>
-                <div class="action-buttons vertical">
-                    <button onclick="sendBulkMessage('first')">First Group (1-25)</button>
-                    <button onclick="sendBulkMessage('second')">Second Group (26-50)</button>
-                    <button onclick="sendBulkMessage('third')">Third Group (51+)</button>
-                </div>
-            </div>
-            
-            <!-- Message Logs -->
-            <div id="messageLogs" class="message-logs" style="display:none;">
-                <h2><i class="fas fa-comment-alt"></i> Recent Message Logs</h2>
-                <div class="logs-container" id="logsContent">
-                    <!-- Log entries will be populated here -->
-                </div>
-                <button id="clearLogsBtn" class="clear-logs-btn">
-                    <i class="fas fa-trash"></i> Clear All Logs
-                </button>
-            </div>
-            
-            <!-- Copyright -->
-            
-        </div>
-    </div>
-    
-    <!-- Bottom Navigation -->
-    <div class="bottom-navbar">
-        <a href="#" class="nav-item active" id="homeBtn">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </a>
-        <a href="messages.html" class="nav-item" id="messagesBtn">
-            <i class="fas fa-comment-alt"></i>
-            <span>Messages</span>
-        </a>
-        <a href="students.html" class="nav-item" id="studentsBtn">
-            <i class="fas fa-user-graduate"></i>
-            <span>Students</span>
-        </a>
-        <a href="profile.html" class="nav-item" id="profileBtn">
-            <i class="fas fa-user"></i>
-            <span>Profile</span>
-        </a>
-    </div>
-    
-    <style>
         /* Floating upload button styles - kept for students.html page */
         .upload-btn {
             position: relative;
@@ -349,49 +195,277 @@
         .bottom-navbar .nav-item:hover {
             color: #007BFF;
         }
+        
+        /* Fix for the profile card and CR profiles overlapping with bottom navbar */
+        #profileCard, #crProfiles, #messageForm, #messageLogs, #bulkMessageForm {
+            margin-bottom: 70px !important;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Make sure bottom navbar is always on top */
+        .bottom-navbar {
+            z-index: 1000 !important;
+        }
+        
+        /* Ensure main container has adequate padding */
+        .container {
+            padding-bottom: 10px !important;
+        }
+
+        /* Splash screen styles */
+        #transitionSplash {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease;
+        }
+
+        #transitionSplash img {
+            max-width: 220px;
+            animation: pulsate 1.5s infinite alternate;
+        }
+
+        @keyframes pulsate {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        .main-content {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
     </style>
-    
-    <!-- Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="script.js"></script>
-    
-    <!-- Script to handle navigation active states -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get all navigation items
-            const navItems = document.querySelectorAll('.bottom-navbar .nav-item');
+</head>
+
+<body>
+    <!-- Transition Splash Screen -->
+    <div id="transitionSplash">
+        <img src="images/brandlogo.png" alt="MentX Brand Logo">
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="main-content">
+        <!-- Scrolling Ribbon -->
+        <div class="scrolling-ribbon">
+            <p>🎉App is under development. More features coming soon! Stay tuned...🎉</p>
+        </div>
+
+        <!-- Header -->
+        <!-- <div class="app-header">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="gn-logo">GN</div>
+                    <div class="header-text">GURU NANAK INSTITUTIONS</div>
+                </div>
+                <div class="programs">
+                    Engineering • Dental • MBA • MCA • Pharmacy • PGDM
+                </div>
+            </div>
+        </div> -->
+        
+        <div class="main-content-wrapper">
+            <!-- <h1 class="brand-logo">MentX</h1> -->
+            <img src="images/brandlogo.png" alt="MentX Brand Logo" class="brand-logo">
             
-            // Add click event listeners to each navigation item
-            navItems.forEach(item => {
-                item.addEventListener('click', function(e) {
-                    // If this is the students link, don't prevent default - let it navigate normally
-                    if (this.id !== 'studentsBtn' && this.id !== 'profileBtn') {
-                        e.preventDefault();
-                    }
+            <!-- Section Title -->
+            <div class="section-banner">
+                <span>(ECE)IIIYR - 2nd SEM - SECTION-4</span>
+            </div>
+            
+            <div class="container">
+                <!-- Search Container -->
+                <div class="search-wrapper">
+                    <input type="text" id="rollNumber" placeholder="Enter Roll Number">
+                    <button id="searchBtn" class="search-button">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                </div>
+                
+                <button class="crs-button" onclick="toggleCRProfiles()">
+                    <i class="fas fa-phone"></i> Contact CRS
+                </button>
+                
+                <!-- Student Profile Card -->
+                <div id="profileCard" class="profile-card" style="display:none;">
+                    <h2 id="studentName"></h2>
+                    <p><strong>Roll Number:</strong> <span id="studentRoll"></span></p>
+                    <p><strong>Email:</strong> <span id="studentEmail"></span></p>
                     
-                    // Remove active class from all items
-                    navItems.forEach(navItem => {
-                        navItem.classList.remove('active');
+                    <!-- Editable Parent Name -->
+                    <p>
+                        <strong>Parent Name:</strong> 
+                        <span id="displayParentName"></span>
+                        <input type="text" id="editParentName" style="display:none;" class="inline-edit-input">
+                    </p>
+                    
+                    <!-- Editable Parent Phone -->
+                    <p>
+                        <strong>Parent Phone:</strong> 
+                        <span id="displayParentPhone"></span>
+                        <input type="tel" id="editParentPhone" style="display:none;" class="inline-edit-input">
+                    </p>
+                    
+                    <!-- Editable Student Phone -->
+                    <p>
+                        <strong>Student Phone:</strong> 
+                        <span id="displayStudentPhone"></span>
+                        <input type="tel" id="editStudentPhone" style="display:none;" class="inline-edit-input">
+                    </p>
+                    
+                    <!-- Edit/Save Button -->
+                    <button id="saveProfileBtn" onclick="saveProfileChanges()" class="edit-save-button" style="display:none;">Save Changes</button>
+
+                    <div class="action-buttons">
+                        <div class="button-row firstflex">
+                            <button onclick="callParent()">Call Parent</button>
+                            <button onclick="callStudent()">Call Student</button>
+                        </div>
+                        <div class="button-row secondflex">
+                            <button id="whatsappParentBtn">WhatsApp Parent</button>
+                            <button onclick="whatsappStudent()">WhatsApp Student</button>
+                        </div>
+                    </div>
+                    
+                    <button id="editProfileBtn" onclick="toggleProfileEdit()" class="edit-save-button full-width-button">Edit Details</button>
+                    
+                    <div id="customMessageArea" style="display:none;">
+                        <textarea id="customMessageContent" placeholder="Enter your custom message"></textarea>
+                        <button id="sendCustomMessageBtn">Send WhatsApp Message</button>
+                    </div>
+                </div>
+                
+                <!-- Message Form -->
+                <div id="messageForm" class="message-form" style="display:none;">
+                    <h2>Send Message</h2>
+                    <textarea id="messageContent" placeholder="Enter your message"></textarea>
+                    <div class="action-buttons">
+                        <button onclick="saveMessage()">Save</button>
+                        <button onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+                
+                <!-- CR Profiles -->
+                <div id="crProfiles" style="display:none;"></div>
+                
+                <!-- Bulk Message Form -->
+                <div id="bulkMessageForm" class="message-form" style="display:none;">
+                    <h2>Bulk Message</h2>
+                    <textarea id="bulkMessageContent" placeholder="Enter your message for all parents"></textarea>
+                    <div class="action-buttons vertical">
+                        <button onclick="sendBulkMessage('first')">First Group (1-25)</button>
+                        <button onclick="sendBulkMessage('second')">Second Group (26-50)</button>
+                        <button onclick="sendBulkMessage('third')">Third Group (51+)</button>
+                    </div>
+                </div>
+                
+                <!-- Message Logs -->
+                <div id="messageLogs" class="message-logs" style="display:none;">
+                    <h2><i class="fas fa-comment-alt"></i> Recent Message Logs</h2>
+                    <div class="logs-container" id="logsContent">
+                        <!-- Log entries will be populated here -->
+                    </div>
+                    <button id="clearLogsBtn" class="clear-logs-btn">
+                        <i class="fas fa-trash"></i> Clear All Logs
+                    </button>
+                </div>
+                
+                <!-- Copyright -->
+                
+            </div>
+        </div>
+        
+        <!-- Bottom Navigation -->
+        <div class="bottom-navbar">
+            <a href="#" class="nav-item active" id="homeBtn">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="messages.html" class="nav-item" id="messagesBtn">
+                <i class="fas fa-comment-alt"></i>
+                <span>Messages</span>
+            </a>
+            <a href="students.html" class="nav-item" id="studentsBtn">
+                <i class="fas fa-user-graduate"></i>
+                <span>Students</span>
+            </a>
+            <a href="profile.html" class="nav-item" id="profileBtn">
+                <i class="fas fa-user"></i>
+                <span>Profile</span>
+            </a>
+        </div>
+        
+        <!-- Scripts -->
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+        <script src="script.js"></script>
+        
+        <!-- Script to handle navigation active states -->
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Get all navigation items
+                const navItems = document.querySelectorAll('.bottom-navbar .nav-item');
+                
+                // Add click event listeners to each navigation item
+                navItems.forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        // If this is the students link, don't prevent default - let it navigate normally
+                        if (this.id !== 'studentsBtn' && this.id !== 'profileBtn') {
+                            e.preventDefault();
+                        }
+                        
+                        // Remove active class from all items
+                        navItems.forEach(navItem => {
+                            navItem.classList.remove('active');
+                        });
+                        
+                        // Add active class to clicked item
+                        this.classList.add('active');
+                        
+                        // If this is messages, navigate to messages.html
+                        if (this.id === 'messagesBtn') {
+                            window.location.href = 'messages.html';
+                        }
+                        // If this is profile, navigate to profile.html
+                        else if (this.id === 'profileBtn') {
+                            window.location.href = 'profile.html';
+                        }
+                        // If this is home, stay on current page
+                        else if (this.id === 'homeBtn') {
+                            // Stay on current page
+                        }
                     });
-                    
-                    // Add active class to clicked item
-                    this.classList.add('active');
-                    
-                    // If this is messages, navigate to messages.html
-                    if (this.id === 'messagesBtn') {
-                        window.location.href = 'messages.html';
-                    }
-                    // If this is profile, navigate to profile.html
-                    else if (this.id === 'profileBtn') {
-                        window.location.href = 'profile.html';
-                    }
-                    // If this is home, stay on current page
-                    else if (this.id === 'homeBtn') {
-                        // Stay on current page
-                    }
                 });
             });
+        </script>
+    </div>
+
+    <script>
+        // Handle splash screen on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const splashScreen = document.getElementById('transitionSplash');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Show splash screen for 1 second
+            setTimeout(function() {
+                // Fade out splash screen
+                splashScreen.style.opacity = '0';
+                // Fade in main content
+                mainContent.style.opacity = '1';
+                
+                // Remove splash screen after animation completes
+                setTimeout(function() {
+                    splashScreen.style.display = 'none';
+                }, 500);
+            }, 1000);
         });
     </script>
 </body>

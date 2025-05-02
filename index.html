@@ -266,143 +266,147 @@
             padding: 1.5rem;
         }
     }
+
+    /* Splash screen styles */
+    #splashScreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--background);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        transition: opacity 0.5s ease;
+    }
+
+    #splashScreen img {
+        max-width: 220px;
+        animation: pulsate 1.5s infinite alternate;
+    }
+
+    @keyframes pulsate {
+        0% { transform: scale(1); opacity: 1; }
+        100% { transform: scale(1.05); opacity: 0.8; }
+    }
+
+    .main-content {
+        opacity: 0;
+        transition: opacity 0.5s ease;
+    }
 </style>
 
 <body>
-
-    <div class="container">
-
-        <div class="auth-container">
-
-            <div class="logo-container">
-
-                <img src="images/brandlogo.png" alt="StudentConnect Logo">
-
-        </div>
-
-
-
-        <div id="authContainer">
-
-            <div id="loginForm">
-
-                    <h2 class="form-title">Welcome Back</h2>
-
-                    <div class="form-group">
-
-                        <input type="email" id="loginEmail" class="input-field" placeholder="Email" required>
-
-                    </div>
-
-                    <div class="form-group password-container">
-
-                        <input type="password" id="loginPassword" class="input-field" placeholder="Password" required>
-
-                    <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility()"></i>
-
-                </div>
-
-                <div class="remember-me">
-
-                    <input type="checkbox" id="rememberMe">
-
-                    <label for="rememberMe">Remember Me</label>
-
-                </div>
-
-                    <button class="btn" onclick="login()">Sign In</button>
-
-                    <div class="form-footer">
-
-                        <a href="#" onclick="showResetPassword()">Forgot Password?</a>
-
-                    </div>
-
-                    <div class="form-switch">
-
-                        Don't have an account? <a href="#" onclick="showRegister()">Sign Up</a>
-
-                    </div>
-
-            </div>
-
-
-
-                <div id="registerForm">
-
-                    <h2 class="form-title">Create Account</h2>
-
-                    <div class="form-group">
-
-                        <input type="email" id="registerEmail" class="input-field" placeholder="Email" required>
-
-                    </div>
-
-                    <div class="form-group password-container">
-
-                        <input type="password" id="registerPassword" class="input-field" placeholder="Password" required>
-
-                        <i class="fas fa-eye password-toggle" onclick="toggleRegisterPasswordVisibility()"></i>
-
-                    </div>
-
-                    <div class="form-group password-container">
-
-                        <input type="password" id="confirmPassword" class="input-field" placeholder="Confirm Password" required>
-
-                        <i class="fas fa-eye password-toggle" onclick="toggleConfirmPasswordVisibility()"></i>
-
-                    </div>
-
-                    <div class="form-group">
-                        <input type="text" id="registerName" class="input-field" placeholder="Enter your name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="registerSection" class="input-field" placeholder="Enter your section" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="text" id="registerStudentData" class="input-field" placeholder="Input student data">
-                    </div>
-
-                    <button class="btn" onclick="register()">Sign Up</button>
-
-                    <div class="form-switch">
-
-                        Already have an account? <a href="#" onclick="showLogin()">Sign In</a>
-
-                    </div>
-
-            </div>
-
-
-
-                <div id="resetPasswordForm">
-
-                    <h2 class="form-title">Reset Password</h2>
-
-                    <div class="form-group">
-
-                        <input type="email" id="resetEmail" class="input-field" placeholder="Email" required>
-
-                    </div>
-
-                    <button class="btn" onclick="resetPassword()">Send Reset Link</button>
-
-                    <div class="form-switch">
-
-                        <a href="#" onclick="showLogin()">Back to Sign In</a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
+    <!-- Splash Screen -->
+    <div id="splashScreen">
+        <img src="images/brandlogo.png" alt="StudentConnect Logo">
     </div>
 
+    <div class="main-content">
+        <div class="container">
+            <div class="auth-container">
+                <div class="logo-container">
+                    <img src="images/brandlogo.png" alt="StudentConnect Logo">
+                </div>
 
+                <div id="authContainer">
+                    <div id="loginForm">
+                        <h2 class="form-title">Welcome Back</h2>
+                        <div class="form-group">
+                            <input type="email" id="loginEmail" class="input-field" placeholder="Email" required>
+                        </div>
+                        <div class="form-group password-container">
+                            <input type="password" id="loginPassword" class="input-field" placeholder="Password" required>
+                            <i class="fas fa-eye password-toggle" onclick="togglePasswordVisibility()"></i>
+                        </div>
+                        <div class="remember-me">
+                            <input type="checkbox" id="rememberMe">
+                            <label for="rememberMe">Remember Me</label>
+                        </div>
+                        <button class="btn" onclick="login()">Sign In</button>
+                        <div class="form-footer">
+                            <a href="#" onclick="showResetPassword()">Forgot Password?</a>
+                        </div>
+                        <div class="form-switch">
+                            Don't have an account? <a href="#" onclick="showRegister()">Sign Up</a>
+                        </div>
+                    </div>
+
+                    <div id="registerForm">
+                        <h2 class="form-title">Create Account</h2>
+                        <div class="form-group">
+                            <input type="email" id="registerEmail" class="input-field" placeholder="Email" required>
+                        </div>
+                        <div class="form-group password-container">
+                            <input type="password" id="registerPassword" class="input-field" placeholder="Password" required>
+                            <i class="fas fa-eye password-toggle" onclick="toggleRegisterPasswordVisibility()"></i>
+                        </div>
+                        <div class="form-group password-container">
+                            <input type="password" id="confirmPassword" class="input-field" placeholder="Confirm Password" required>
+                            <i class="fas fa-eye password-toggle" onclick="toggleConfirmPasswordVisibility()"></i>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="registerName" class="input-field" placeholder="Enter your name" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="text" id="registerSection" class="input-field" placeholder="Enter your section" required>
+                        </div>
+                        <div class="form-group">
+                            <textarea id="registerStudentData" class="input-field" style="min-height: 150px; resize: vertical; font-family: monospace;" placeholder='Valid JSON format (required):
+[
+  {
+    "rollNumber": "22WJ1A04K3", 
+    "name": "STUDENT NAME", 
+    "parentPhone": "9701016317",
+    "parentName": "",
+    "studentPhone": "9963813930"
+  }
+]'></textarea>
+                        </div>
+                        <button class="btn" onclick="register()">Sign Up</button>
+                        <div class="form-switch">
+                            Already have an account? <a href="#" onclick="showLogin()">Sign In</a>
+                        </div>
+                    </div>
+
+                    <div id="resetPasswordForm">
+                        <h2 class="form-title">Reset Password</h2>
+                        <div class="form-group">
+                            <input type="email" id="resetEmail" class="input-field" placeholder="Email" required>
+                        </div>
+                        <button class="btn" onclick="resetPassword()">Send Reset Link</button>
+                        <div class="form-switch">
+                            <a href="#" onclick="showLogin()">Back to Sign In</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Handle splash screen on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const splashScreen = document.getElementById('splashScreen');
+            const mainContent = document.querySelector('.main-content');
+            
+            // Show splash screen for 1.5 seconds
+            setTimeout(function() {
+                // Fade out splash screen
+                splashScreen.style.opacity = '0';
+                // Fade in main content
+                mainContent.style.opacity = '1';
+                
+                // Remove splash screen after animation completes
+                setTimeout(function() {
+                    splashScreen.style.display = 'none';
+                }, 500);
+            }, 1500);
+        });
+    </script>
 
     <script type="module">
         // Import the functions you need from the SDKs you need
@@ -412,14 +416,14 @@
 
         // Your web app's Firebase configuration
         const firebaseConfig = {
-  apiKey: "AIzaSyCs1Wgew-Y1hcY8xIUm9uFagdeByDTDGU0",
-  authDomain: "collegeapp-59309.firebaseapp.com",
-  projectId: "collegeapp-59309",
-  storageBucket: "collegeapp-59309.firebasestorage.app",
-  messagingSenderId: "298826677970",
+            apiKey: "AIzaSyCs1Wgew-Y1hcY8xIUm9uFagdeByDTDGU0",
+            authDomain: "collegeapp-59309.firebaseapp.com",
+            projectId: "collegeapp-59309",
+            storageBucket: "collegeapp-59309.firebasestorage.app",
+            messagingSenderId: "298826677970",
             appId: "1:298826677970:web:3989fed84dd5bb4d73f70b",
             databaseURL: "https://collegeapp-59309-default-rtdb.firebaseio.com/"
-};
+        };
 
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -503,45 +507,56 @@
 
             // Parse student data as JSON array
             let studentDataArray = [];
+            
+            // Only process student data if provided
             if (studentDataRaw.trim()) {
                 try {
-                    studentDataArray = eval(studentDataRaw); // Accepts array-like input (e.g., pasted JS array)
-                    if (!Array.isArray(studentDataArray)) throw new Error();
+                    // Try parsing as direct JSON
+                    studentDataArray = JSON.parse(studentDataRaw);
                 } catch (e) {
-                    alert("Student data must be a valid JavaScript array of objects. Example: [ { rollNumber: '...', name: '...', ... }, ... ]");
+                    try {
+                        // Alternative: process input with relaxed JSON requirements
+                        const processedInput = studentDataRaw
+                            .replace(/(['"])?([a-zA-Z0-9_]+)(['"])?:/g, '"$2":') // Ensure property names are quoted
+                            .replace(/'/g, '"'); // Replace single quotes with double quotes
+                        
+                        studentDataArray = JSON.parse(processedInput);
+                    } catch (parseError) {
+                        alert("Invalid student data format. Please provide a valid JSON array.");
+                        return;
+                    }
+                }
+                
+                if (!Array.isArray(studentDataArray)) {
+                    alert("Student data must be an array.");
                     return;
                 }
             }
 
-            // Transform student data array to object with roll numbers as keys
-            const studentData = {};
-            for (const student of studentDataArray) {
-                if (!student.rollNumber) {
-                    alert("Each student object must have a rollNumber property.");
-                    return;
-                }
-                studentData[student.rollNumber] = student;
-            }
-
+            // Create user with email and password
             createUserWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    const user = userCredential.user;
-                    // Store all faculty data under their name
-                    set(ref(database, 'faculty/' + name), {
+                    // Save additional data to Realtime Database
+                    const userId = userCredential.user.uid;
+                    const facultyName = name.replace(/\s+/g, ''); // Use name without spaces as faculty name
+                    
+                    // First set the faculty data
+                    return set(ref(database, 'faculty/' + facultyName), {
                         email: email,
-                        password: password, // Storing as requested (not secure)
-                        section: section,
-                        studentData: studentData
-                    })
-                    .then(() => {
-                        console.log("Faculty data saved to database");
-                    alert("Registration successful! Please log in.");
-                        showLogin();
-                    })
-                    .catch((error) => {
-                        console.error("Error saving faculty data:", error);
-                        alert("Registration successful, but there was an error saving additional data.");
-                    showLogin();
+                        password: password, // Note: normally passwords should not be stored in plaintext
+                        section: section
+                    }).then(() => {
+                        // If student data was provided, add it
+                        if (studentDataArray.length > 0) {
+                            return set(ref(database, 'faculty/' + facultyName + '/studentData'), studentDataArray);
+                        }
+                        return Promise.resolve();
+                    }).then(() => {
+                        // Store faculty name in localStorage for future use
+                        localStorage.setItem('currentFaculty', facultyName);
+                        
+                        // Redirect to webapp after successful registration
+                        window.location.href = 'webapp.html';
                     });
                 })
                 .catch((error) => {
@@ -572,7 +587,8 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             const rememberMe = document.getElementById('rememberMe').checked;
-
+            
+            // Store in local storage if remember me is checked
             if (rememberMe) {
                 localStorage.setItem('rememberedEmail', email);
                 localStorage.setItem('rememberedPassword', password);
@@ -580,42 +596,35 @@
                 localStorage.removeItem('rememberedEmail');
                 localStorage.removeItem('rememberedPassword');
             }
-
+            
             signInWithEmailAndPassword(auth, email, password)
                 .then((userCredential) => {
-                    const user = userCredential.user;
-                    
-                    // Find faculty name by email
-                    const facultyRef = ref(database, 'faculty');
-                    const dbRef = ref(database);
-                    
-                    // Get all faculty members and find the one matching this email
-                    get(facultyRef).then((snapshot) => {
+                    // Find the faculty name associated with this email
+                    return get(ref(database, 'faculty')).then((snapshot) => {
                         if (snapshot.exists()) {
+                            const faculties = snapshot.val();
                             let facultyName = null;
-                            snapshot.forEach((facultySnapshot) => {
-                                const faculty = facultySnapshot.val();
-                                if (faculty.email === email) {
-                                    facultyName = facultySnapshot.key;
-                                    // Store faculty name in localStorage
-                                    localStorage.setItem('currentFaculty', facultyName);
-                                    console.log("Found faculty:", facultyName);
-                                }
-                            });
                             
-                            if (!facultyName) {
-                                console.warn("Could not find faculty with email:", email);
+                            // Find the faculty with matching email
+                            for (const name in faculties) {
+                                if (faculties[name].email === email) {
+                                    facultyName = name;
+                                    break;
+                                }
                             }
                             
-                            // Redirect to webapp.html regardless
-                            window.location.href = "webapp.html";
+                            if (facultyName) {
+                                // Store faculty name in localStorage
+                                localStorage.setItem('currentFaculty', facultyName);
+                                
+                                // Redirect to webapp
+                                window.location.href = 'webapp.html';
+                            } else {
+                                throw new Error("Faculty not found");
+                            }
                         } else {
-                            console.warn("No faculty data found");
-                            window.location.href = "webapp.html";
+                            throw new Error("No faculty data found");
                         }
-                    }).catch((error) => {
-                        console.error("Error finding faculty:", error);
-                        window.location.href = "webapp.html";
                     });
                 })
                 .catch((error) => {
@@ -691,26 +700,24 @@
         }
 
         // Check for remembered credentials
-        function checkRememberedCredentials() {
+        document.addEventListener('DOMContentLoaded', function() {
             const rememberedEmail = localStorage.getItem('rememberedEmail');
             const rememberedPassword = localStorage.getItem('rememberedPassword');
             
-            if (rememberedEmail) {
+            if (rememberedEmail && rememberedPassword) {
                 document.getElementById('loginEmail').value = rememberedEmail;
-            }
-            
-            if (rememberedPassword) {
                 document.getElementById('loginPassword').value = rememberedPassword;
                 document.getElementById('rememberMe').checked = true;
             }
-        }
-
-        // Call this function when the page loads
-        checkRememberedCredentials();
+            
+            // Check if already logged in
+            const currentFaculty = localStorage.getItem('currentFaculty');
+            if (currentFaculty) {
+                // Skip login if already authenticated
+                window.location.href = 'webapp.html';
+            }
+        });
     </script>
-
-    <script src="scripts.js"></script>
-
 </body>
 
 

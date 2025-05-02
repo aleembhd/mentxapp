@@ -99,7 +99,75 @@ const database = firebase.database();
 
 // Function to fetch faculty-specific student data from Firebase
 function fetchStudentData() {
-  // Show loading indicator
+  // Check if we're on profile.html, if so, skip the loading indicator
+  if (window.location.pathname.includes('profile.html')) {
+    // Get faculty name from localStorage
+    const facultyName = localStorage.getItem('currentFaculty');
+    console.log("Fetching student data for faculty:", facultyName);
+
+    if (!facultyName) {
+      console.warn("No faculty name found in localStorage, using default data");
+      return;
+    }
+
+    // Get student data from Firebase without showing loading
+    database.ref('faculty/' + facultyName + '/studentData').once('value')
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          // Convert object to array
+          const studentData = snapshot.val();
+          students = Object.values(studentData);
+          console.log("Loaded student data for faculty:", facultyName, students);
+
+          // Update section display if needed
+          updateSectionDisplay(facultyName);
+        } else {
+          console.warn("No student data found for faculty:", facultyName);
+          // Keep default data (already initialized)
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching student data:", error);
+        // Keep default data (already initialized)
+      });
+    return;
+  }
+
+  // Skip loading screen for webapp.html too
+  if (window.location.pathname.includes('webapp.html')) {
+    // Get faculty name from localStorage
+    const facultyName = localStorage.getItem('currentFaculty');
+    console.log("Fetching student data for faculty:", facultyName);
+
+    if (!facultyName) {
+      console.warn("No faculty name found in localStorage, using default data");
+      return;
+    }
+
+    // Get student data from Firebase without showing loading
+    database.ref('faculty/' + facultyName + '/studentData').once('value')
+      .then(snapshot => {
+        if (snapshot.exists()) {
+          // Convert object to array
+          const studentData = snapshot.val();
+          students = Object.values(studentData);
+          console.log("Loaded student data for faculty:", facultyName, students);
+
+          // Update section display if needed
+          updateSectionDisplay(facultyName);
+        } else {
+          console.warn("No student data found for faculty:", facultyName);
+          // Keep default data (already initialized)
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching student data:", error);
+        // Keep default data (already initialized)
+      });
+    return;
+  }
+
+  // For other pages, show loading indicator
   const loadingIndicator = document.createElement('div');
   loadingIndicator.className = 'loading-indicator';
   loadingIndicator.innerHTML = '<div class="spinner"></div><p>Loading student data...</p>';
@@ -1344,23 +1412,6 @@ function whatsappStudent() {
     const formattedPhone = `+91${studentPhone.replace(/\D/g, '')}`;
     const message = encodeURIComponent('Hello, this is a message from your faculty.');
     window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
-    
-    // Log the WhatsApp message
-    const log = {
-      sender: DISPLAY_FACULTY_NAME,
-      recipient: formattedPhone,
-      studentName: studentName,
-      studentRoll: studentRoll,
-      parentName: parentName,
-      message: 'WhatsApp message sent to student',
-      timestamp: new Date().toISOString(),
-      status: 'sent',
-      platform: 'WhatsApp',
-      type: 'whatsapp'
-    };
-    firebaseDatabase.saveMessage(log)
-      .then(() => fetchMessagesFromServer())
-      .catch(error => console.error('Error saving message:', error));
   } else {
     alert('Student phone number not available.');
   }
@@ -1428,28 +1479,7 @@ function exportMessageLogs() {
 function callCR(rollNumber, phoneNumber) {
   // Use the provided phone number if available
   if (phoneNumber) {
-    // Log the CR call
-    const cr = students.find(s => s.rollNumber === rollNumber) || { name: 'CR', rollNumber: rollNumber };
-    
-    const log = {
-      sender: DISPLAY_FACULTY_NAME,
-      recipient: phoneNumber,
-      studentName: cr.name,
-      studentRoll: rollNumber,
-      parentName: cr.parentName || 'N/A',
-      message: 'Phone call to CR',
-      timestamp: new Date().toISOString(),
-      status: 'initiated',
-      platform: 'Phone',
-      type: 'call-cr'
-    };
-    
-    // Save log to Firebase
-    firebaseDatabase.saveMessage(log)
-      .then(() => fetchMessagesFromServer())
-      .catch(error => console.error('Error saving CR call log:', error));
-    
-    // Make the call
+    // Make the call without logging to Firebase
     window.location.href = `tel:${phoneNumber}`;
     return;
   }
@@ -1457,25 +1487,7 @@ function callCR(rollNumber, phoneNumber) {
   // Fallback to searching in students array if no phone provided
   const cr = students.find(s => s.rollNumber === rollNumber);
   if (cr && cr.studentPhone) {
-    const startTime = new Date();
     window.location.href = `tel:${cr.studentPhone}`;
-    
-    // Log the CR call
-    const log = {
-      sender: DISPLAY_FACULTY_NAME,
-      recipient: cr.studentPhone,
-      studentName: cr.name,
-      studentRoll: cr.rollNumber,
-      parentName: cr.parentName || 'N/A',
-      message: 'Phone call to CR',
-      timestamp: new Date().toISOString(),
-      status: 'initiated',
-      platform: 'Phone',
-      type: 'call-cr'
-    };
-    firebaseDatabase.saveMessage(log)
-      .then(() => fetchMessagesFromServer())
-      .catch(error => console.error('Error saving CR call log:', error));
   } else {
     alert('Phone number not available for this CR.');
   }
@@ -1488,28 +1500,7 @@ function whatsappCR(rollNumber, phoneNumber) {
     const formattedPhone = phoneNumber.startsWith('+') ? phoneNumber : `+91${phoneNumber.replace(/\D/g, '')}`;
     const message = encodeURIComponent('Hello CR, this is a message from your faculty.');
     
-    // Log the CR WhatsApp message
-    const cr = students.find(s => s.rollNumber === rollNumber) || { name: 'CR', rollNumber: rollNumber };
-    
-    const log = {
-      sender: DISPLAY_FACULTY_NAME,
-      recipient: formattedPhone,
-      studentName: cr.name,
-      studentRoll: rollNumber,
-      parentName: cr.parentName || 'N/A',
-      message: 'WhatsApp message sent to CR',
-      timestamp: new Date().toISOString(),
-      status: 'sent',
-      platform: 'WhatsApp',
-      type: 'whatsapp-cr'
-    };
-    
-    // Save log to Firebase
-    firebaseDatabase.saveMessage(log)
-      .then(() => fetchMessagesFromServer())
-      .catch(error => console.error('Error saving CR WhatsApp log:', error));
-    
-    // Open WhatsApp
+    // Open WhatsApp without logging to Firebase
     window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
     return;
   }
@@ -1520,30 +1511,13 @@ function whatsappCR(rollNumber, phoneNumber) {
     const formattedPhone = `+91${cr.studentPhone.replace(/\D/g, '')}`;
     const message = encodeURIComponent('Hello CR, this is a message from your faculty.');
     window.open(`https://wa.me/${formattedPhone}?text=${message}`, '_blank');
-    
-    // Log the CR WhatsApp message
-    const log = {
-      sender: DISPLAY_FACULTY_NAME,
-      recipient: formattedPhone,
-      studentName: cr.name,
-      studentRoll: cr.rollNumber,
-      parentName: cr.parentName || 'N/A',
-      message: 'WhatsApp message sent to CR',
-      timestamp: new Date().toISOString(),
-      status: 'sent',
-      platform: 'WhatsApp',
-      type: 'whatsapp-cr'
-    };
-    firebaseDatabase.saveMessage(log)
-      .then(() => fetchMessagesFromServer())
-      .catch(error => console.error('Error saving CR WhatsApp log:', error));
   } else {
     alert('WhatsApp number not available for this CR.');
   }
 }
 
 function openStudentsPage() {
-  window.open('students.html', '_blank');
+  window.location.href = 'students.html';
 }
 
 function sendBulkWhatsAppMessage(parentPhones, message) {

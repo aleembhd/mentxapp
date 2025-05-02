@@ -1903,18 +1903,46 @@
     function setupCardSelectionEvents(card) {
       let touchMoved = false; // Flag to detect if touch moved
       let touchStartTime = 0; // Record start time
+      let longPressTimer; // Timer for long press detection
+      let longPressDetected = false; // Flag to track if long press was detected
 
       card.addEventListener('touchstart', (e) => {
           touchMoved = false; // Reset moved flag on new touch
           touchStartTime = Date.now(); // Record start time
-          // No timer needed here
+          longPressDetected = false; // Reset long press detection flag
+          
+          // Add timer to detect long press while finger is still down
+          longPressTimer = setTimeout(() => {
+              if (!touchMoved) {
+                  // This is a long press - select immediately
+                  console.log('Long press detected while finger still down, initiating selection mode.');
+                  longPressDetected = true; // Set flag that long press was detected
+                  
+                  // Provide haptic feedback if available
+                  if (window.navigator && window.navigator.vibrate) {
+                      window.navigator.vibrate(50); // Vibrate for 50ms
+                  }
+                  
+                  // Enter selection mode if not already in it
+                  if (!isSelectionMode) {
+                      isSelectionMode = true;
+                      toggleSelectionModeUI(true);
+                  }
+                  
+                  // Select this card
+                  toggleCardSelection(card, true);
+              }
+          }, 1000); // 1 second for long press detection
       }, { passive: true }); // Passive listener for performance
 
       card.addEventListener('touchmove', () => {
           touchMoved = true; // Set flag if touch moves during the press
+          clearTimeout(longPressTimer); // Clear the long press timer if touch moves
       }, { passive: true });
 
       card.addEventListener('touchend', (e) => {
+          clearTimeout(longPressTimer); // Clear the long press timer
+          
           const touchEndTime = Date.now();
           const touchDuration = touchEndTime - touchStartTime;
 
@@ -1924,35 +1952,21 @@
               return; 
           }
 
-          // At this point, touch didn't move significantly
+          // If we detected a long press during touchstart and the user is now lifting their finger,
+          // don't do anything here - keep the selection as is
+          if (longPressDetected) {
+              return;
+          }
 
+          // If already in selection mode, this tap toggles the card's state
           if (isSelectionMode) {
-              // If already in selection mode, this tap toggles the card's state
-              // A short tap (duration doesn't matter here, just that it ended without moving)
               const checkbox = card.querySelector('.selection-checkbox');
               if (checkbox) { // Ensure checkbox exists
                   const currentlySelected = checkbox.classList.contains('checked');
                   toggleCardSelection(card, !currentlySelected);
                   e.preventDefault(); // Prevent the browser from firing a click event after this touch
               }
-          } else {
-              // If not in selection mode, check if this was a long press
-              if (touchDuration >= LONG_PRESS_DURATION) {
-                  // This touch action WAS the long press that initiates the mode
-                  console.log('Long press detected on touchend, initiating selection mode.'); // Debug log
-                  isSelectionMode = true; // Set the mode flag
-                  toggleSelectionModeUI(true); // Update the UI for selection mode
-                  toggleCardSelection(card, true); // Select the card that was long-pressed
-              } else {
-                  // This was a short tap, not a long press, and not in selection mode
-                  // Handle regular tap action here if needed (e.g., view details in future)
-                  // console.log('Regular short tap on card (not in selection mode):', card.dataset.rollNumber);
-              }
-          }
-
-          // Reset flags/state if necessary (touchMoved already reset if applicable)
-          touchMoved = false;
-
+          } 
       });
 
       // Fallback for non-touch devices (or clicks not captured by touchend)
@@ -1978,7 +1992,6 @@
           }
       });
     }
-
 
     // Toggle selection mode UI
     function toggleSelectionModeUI(enabled) {
