@@ -71,7 +71,7 @@
 // ];
 
 // Variable to store the students data (will be populated from Firebase or fallback to default)
-let students = [...defaultStudents]; // Initialize with default
+// let students = [...defaultStudents]; // Initialize with default
 
 let messageLogs = [];
 
